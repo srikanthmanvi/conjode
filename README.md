@@ -1,6 +1,6 @@
 # conjode
 
-A Clojure library communicate with Gemfire/Apache Geode.
+A Clojure library to communicate with Gemfire/Apache Geode.
 
 ## Usage
 
