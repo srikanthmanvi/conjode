@@ -1,10 +1,10 @@
 # conjode
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library communicate with Gemfire/Apache Geode.
 
 ## Usage
 
-FIXME
+work-in-progress
 
 ## License
 
