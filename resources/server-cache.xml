@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE cache PUBLIC
+        "-//GemStone Systems, Inc.//GemFire Declarative Caching 7.0//EN"
+        "http://www.gemstone.com/dtd/cache7_0.dtd">
+<cache>
+    <pdx >
+        <pdx-serializer >
+            <!--<class-name >org.apache.geode.pdx.ReflectionBasedAutoSerializer</class-name>-->
+            <class-name >com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer</class-name>
+            <parameter name="classes">
+                <string>com.sm.geode.ref.domain.*</string>
+            </parameter>
+            <!--<parameter name="check-portability"><string>true</string></parameter>-->
+        </pdx-serializer>
+    </pdx>
+    <region-attributes id="my_attr"  data-policy="persistent-replicate"/>
+
+    <region name="Customer" refid="REPLICATE">
+        <region-attributes scope="global"/>
+    </region>
+
+    <region name="Order">
+        <region-attributes
+                data-policy="partition">
+                </region-attributes>
+    </region>
+
+    <resource-manager critical-heap-percentage="90"
+                      eviction-heap-percentage="50"/>
+</cache>
