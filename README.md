@@ -1,5 +1,7 @@
 # conjode
 
+[![Build Status](https://travis-ci.org/smanvi-pivotal/conjode.svg?branch=master)](https://travis-ci.org/smanvi-pivotal/conjode)
+
 A Clojure library to communicate with Gemfire/Apache Geode.
 
 ## Usage
