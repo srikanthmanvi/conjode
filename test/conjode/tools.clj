@@ -1,11 +1,11 @@
 (ns conjode.tools
   (:require [conjode.core :refer :all :as c])
-  (:import [com.sm.geode.ref.domain Customer]))
+  (:import [org.conjode.java Customer]))
 
 (comment)
-(c/put 50 (Customer. "fname4" "lname2" "addr2") "Customer" (c/get-client-cache "client-cache.xml"))
+(c/put 500 (Customer. "fname4" "lname2" "addr2") "Customer" (c/get-client-cache "client-cache.xml"))
 (comment)
-(c/get 50 "Customer" (c/get-client-cache "client-cache.xml"))
+(c/get 500 "Customer" (c/get-client-cache "client-cache.xml"))
 
 (comment (defn create-customer [i]
            (let [customer (Customer.)]
@@ -14,7 +14,6 @@
                  (.setAge customer i)
                  (.setState customer (str "State" i))
                  (.setAddress customer (str "Address" i))
-                 ;(.setData customer (byte 100))
                  )
              customer)))
 
