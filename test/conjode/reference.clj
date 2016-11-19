@@ -95,8 +95,6 @@
 (let [a1 123 b 456]
   (println a1 b))
 
-(clojure.set/rename-keys {:a 1 :b 2} (map #{} ))
+(clojure.set/rename-keys {:a 1 :b 2} (map #{} ) )
 
-(defn my_fun
-  [x]
-  (println first (x) ))
+
