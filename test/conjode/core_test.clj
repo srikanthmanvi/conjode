@@ -2,29 +2,25 @@
   (:require [clojure.test :refer :all]
             [conjode.core :refer :all :as c]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 1 1)))
-  (testing "FIXME2, I fail."
-    (is (= "b" "b")))
-  (testing "FIXME3, I fail."
-    (is (= :e :d))))
-
 (def client-xml "client-cache.xml")
 (def server-xml "server-cache.xml")
 
-(deftest my_test
+(deftest cache-tests
 
   (testing "Test get-client-cache"
-    (not (nil? (c/get-client-cache client-xml))))
+    (do (println "Running Test get-client-cache")
+        (let [client-cache (c/get-client-cache client-xml)
+              result       (not (nil? client-cache))]
+          (do (.close client-cache)
+              result))))
 
   (testing "Test get-cache"
-    (not (nil? (c/get-cache server-xml)))))
+    (do (println "Running Test get-cache")
+        (let [cache  (c/get-cache server-xml)
+              result (not (nil? cache))]
+          (do (.close cache)
+              result)))))
 
 
-(comment (def sample-region-config {:region-name "TradeRegion"
-                                    :ref-id      :caching-proxy}))
 
-(comment (c/create-region sample-region-config
-                          (c/client-cache-from-xml "client-cache.xml")))
 
