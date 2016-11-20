@@ -1,12 +1,15 @@
 (ns conjode.util-test
   (:require
     [clojure.test :refer :all]
-    [conjode.util :refer :all :as u]))
+    [conjode.util :refer :all :as u])
+  (:import (java.util Properties)))
 
-(def server-properties "/Users/smanvi/Workspace_clj/conjode/resources/geode-server.properties")
-(deftest test-load
+(def server-properties-file "resources/geode-server.properties")
 
-   (testing "Test load-properties"
-        (not (nil? (u/load-properties server-properties)))))
+(deftest test-read-properties-file
 
+  (testing "Test Load Properties from file"
+    (let [^Properties result (u/read-properties-file server-properties-file)]
+      (clojure.test/is (> (.size result) 1)))))
 
+;(run-tests 'conjode.util-test)

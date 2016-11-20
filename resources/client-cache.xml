@@ -4,8 +4,7 @@
 
 <client-cache>
     <pool name="myPool">
-        <locator host="localhost" port="10334"/>
-        <locator host="localhost" port="10512"/>
+        <locator host="localhost" port="40404"/>
     </pool>
     <pdx >
         <pdx-serializer >

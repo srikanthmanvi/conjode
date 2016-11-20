@@ -1,26 +1,26 @@
 (ns conjode.core
   (:import
-    (com.gemstone.gemfire.cache.client ClientCache))
-  (:require [msync.properties.core :as properties-reader]
-            [conjode.helper :as helper]))
+    (com.gemstone.gemfire.cache.client ClientCache ClientCacheFactory))
+  (:require [conjode.helper :as helper]
+            [conjode.util :as u]))
 
+(defn client-cache
+  "Returns a client cache configured using the passed cache xml file or the properties file"
+  [client-cache-file]
+  (cond (.endsWith client-cache-file ".properties")
+    (.create (ClientCacheFactory. (u/read-properties-file client-cache-file)))
+    (.endsWith client-cache-file ".xml")
+    (let [factory (ClientCacheFactory.)]
+      (do (.set "cache-xml-file" client-cache-file factory)
+          (.create factory)))))
 
-(defn get-client-cache
-  "Returns com.gemstone.gemfire.cache.client ClientCache, argument can be a cache.xml or a properties file"
-  [^String cache-config-file]
-  (cond (.endsWith cache-config-file ".properties")
-        (helper/client-cache-from-properties cache-config-file)
-        (.endsWith cache-config-file ".xml")
-        (helper/client-cache-from-xml cache-config-file)))
-
-
-(defn get-cache
-  "Returns com.gemstone.gemfire.cache.Cache, argument can be a cache.xml or a properties file"
-  [^String cache-config-file]
-  (cond (.endsWith cache-config-file ".properties")
-        (helper/cache-from-properties cache-config-file)
-        (.endsWith cache-config-file ".xml")
-        (helper/cache-from-xml cache-config-file)))
+;(defn get-cache
+;  "Returns com.gemstone.gemfire.cache.Cache, argument can be a cache.xml or a properties file"
+;  [^String cache-config-file]
+;  (cond (.endsWith cache-config-file ".properties")
+;        (helper/cache-from-properties cache-config-file)
+;        (.endsWith cache-config-file ".xml")
+;        (helper/cache-from-xml cache-config-file)))
 
 (defn get
   "Gets the value associated with the given key"

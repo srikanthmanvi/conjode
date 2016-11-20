@@ -1,6 +1,8 @@
 (ns conjode.helper
   (:import (com.gemstone.gemfire.cache CacheFactory)
-           (com.gemstone.gemfire.cache.client ClientCacheFactory)))
+           (com.gemstone.gemfire.cache.client ClientCacheFactory)
+           (java.util Properties)
+           (java.io FileInputStream)))
 
 
 (defn cache-from-xml
@@ -16,5 +18,5 @@
         geode-client (.create factory)]
     geode-client))
 
-(defn cache-from-properties [config-file] :to-do)
-(defn client-cache-from-properties [config-file] :to-do)
+
+

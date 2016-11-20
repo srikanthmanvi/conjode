@@ -13,9 +13,7 @@
                  (.setLastName customer (str "LastName" i))
                  (.setAge customer i)
                  (.setState customer (str "State" i))
-                 (.setAddress customer (str "Address" i))
-                 )
-             customer)))
+                 (.setAddress customer (str "Address" i))) customer)))
 
 (comment
   (time (let [cache (c/client-cache-from-xml cache-xml)]
