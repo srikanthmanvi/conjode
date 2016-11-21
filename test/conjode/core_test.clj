@@ -11,7 +11,7 @@
 
 (deftest test-client-cache
 
-  (testing "Testing client-cache by passing properties"
+  (testing "Testing client-cache by passing properties."
     (do (let [client-cache (c/client-cache client-properties)
               result       (not (nil? client-cache))]
           (do (.close client-cache)
