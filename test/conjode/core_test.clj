@@ -39,3 +39,16 @@
              "Theses tests test the apis which use clientCache and require a server running"
              (testing "Test get-client-cache")
              ())))
+
+(comment
+  (def my-cache (conjode.core/cache "/Users/smanvi/Workspace_clj/conjode/resources/geode-server.properties")))
+
+(deftest core-test1
+  (is (= 1 1)))
+
+(deftest core-test2
+  (is (= 2 2)))
+
+(deftest core-standalone-tests
+  (core-test1)
+  (core-test2))

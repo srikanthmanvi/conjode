@@ -3,18 +3,9 @@
         "http://www.gemstone.com/dtd/cache8_0.dtd">
 
 <client-cache>
-    <pool name="myPool">
-        <locator host="localhost" port="40404"/>
+    <pool name="mypool">
+        <server host="localhost" port="40404"/>
     </pool>
-    <pdx >
-        <pdx-serializer >
-            <class-name >com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer</class-name>
-            <parameter name="classes">
-                <string>com.sm.geode.ref.domain.*</string>
-            </parameter>
-            <!--<parameter name="check-portability"><string>true</string></parameter>-->
-        </pdx-serializer>
-    </pdx>
 
     <region name="Customer" refid="PROXY">
             </region>

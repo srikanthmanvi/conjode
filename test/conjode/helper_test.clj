@@ -1,6 +1,15 @@
 (ns conjode.helper-test
-  (:require [clojure.test :refer :all]
-            [conjode.helper :as helper])
-  (:import (java.util Properties)))
+  (:require [clojure.test :refer :all]))
 
-(run-tests 'conjode.helper-test)
+
+(deftest helper-test1
+  (is (= 1 1)))
+
+(deftest helper-test2
+  (is (= 2 2)))
+
+(deftest helper-standalone-tests
+  (helper-test1)
+  (helper-test2))
+
+;(run-tests 'conjode.helper-test)
