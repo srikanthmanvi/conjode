@@ -3,9 +3,9 @@
         "http://www.gemstone.com/dtd/cache8_0.dtd">
 
 <client-cache>
-    <pool name="mypool">
-        <server host="localhost" port="40404"/>
-    </pool>
+    <!--<pool name="mypool">-->
+        <!--<server host="localhost" port="40404"/>-->
+    <!--</pool>-->
 
     <region name="Customer" refid="PROXY">
             </region>

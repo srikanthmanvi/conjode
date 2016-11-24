@@ -9,13 +9,28 @@
 (def client-xml "client-cache.xml")
 (def server-xml "server-cache.xml")
 
-(deftest test-client-cache
 
-  (testing "Testing client-cache by passing properties."
-    (do (let [client-cache (c/client-cache client-properties)
-              result       (not (nil? client-cache))]
-          (do (.close client-cache)
-              (is (= true result)))))))
+(deftest test-client-cache-using-properties
+  (do (let [client-cache (c/client-cache client-properties)
+            result       (not (nil? client-cache))]
+        (do (.close client-cache)
+            (is (= true result))))))
+
+(deftest test-client-cache-using-xml
+  (do (let [client-cache (c/client-cache client-xml)
+            result       (not (nil? client-cache))]
+        (do (.close client-cache)
+            (is (= true result))))))
+
+
+
+(comment (deftest test-client-cache
+
+           (testing "Testing client-cache by passing properties."
+             (do (let [client-cache (c/client-cache client-properties)
+                       result       (not (nil? client-cache))]
+                   (do (.close client-cache)
+                       (is (= true result))))))))
 
 (comment
   (deftest cache-tests
