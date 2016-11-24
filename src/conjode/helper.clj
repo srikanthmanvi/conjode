@@ -5,18 +5,7 @@
            (java.io FileInputStream)))
 
 
-(defn cache-from-xml
-  "Returns a new com.gemstone.gemfire.cache.Cache created using the passed cache.xml."
-  [server-cache-xml]
-  (let [factory     (doto (CacheFactory.) (.set "cache-xml-file" server-cache-xml))
-        geode-cache (.create factory)] geode-cache))
 
-(defn client-cache-from-xml
-  "Returns a client cache configured using the passed cache xml file"
-  [client-cache-xml]
-  (let [factory      (doto (ClientCacheFactory.) (.set "cache-xml-file" client-cache-xml))
-        geode-client (.create factory)]
-    geode-client))
 
 
 

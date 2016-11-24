@@ -10,6 +10,4 @@
 
   (testing "Test Load Properties from file"
     (let [^Properties result (u/read-properties-file server-properties-file)]
-      (clojure.test/is (> (.size result) 1)))))
-
-;(run-tests 'conjode.util-test)
+      (is (> (.size result) 1)))))

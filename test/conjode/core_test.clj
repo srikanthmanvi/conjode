@@ -23,30 +23,18 @@
             (is (= true result))))))
 
 
-;(deftest test-cache-using-xml
-;  "Tests the cache function, which returns a new Geode Cache,
-;  essentially creates a new server process"
-;  )
+(deftest test-cache-using-xml
+  "Tests the cache function, which returns a new Geode Cache,
+  essentially creates a new server process"
+  (let [cache  (c/cache server-xml)
+        result (not (nil? cache))
+        close  (.close cache)]
+    (is (= true result))))
 
-(comment
-  (deftest cache-tests
-
-    (testing "Test get-cache"
-       (let [cache  (c/cache server-xml)
-               result (not (nil? cache))]
-           (do (.close cache)
-               result)))))
-
-
-(comment
-  (def my-cache (conjode.core/cache "/Users/smanvi/Workspace_clj/conjode/resources/geode-server.properties")))
-
-(deftest core-test1
-  (is (= 1 1)))
-
-(deftest core-test2
-  (is (= 2 2)))
-
-(deftest core-standalone-tests
-  (core-test1)
-  (core-test2))
+(deftest test-cache-using-properties
+  "Tests the cache function, which returns a new Geode Cache,
+  essentially creates a new server process"
+  (let [cache  (c/cache server-properties)
+        result (not (nil? cache))
+        close  (.close cache)]
+    (is (= true result))))
