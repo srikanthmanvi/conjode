@@ -23,37 +23,20 @@
             (is (= true result))))))
 
 
-
-(comment (deftest test-client-cache
-
-           (testing "Testing client-cache by passing properties."
-             (do (let [client-cache (c/client-cache client-properties)
-                       result       (not (nil? client-cache))]
-                   (do (.close client-cache)
-                       (is (= true result))))))))
+;(deftest test-cache-using-xml
+;  "Tests the cache function, which returns a new Geode Cache,
+;  essentially creates a new server process"
+;  )
 
 (comment
   (deftest cache-tests
 
-    (testing "Test get-client-cache"
-      (do (println "Running Test get-client-cache")
-          (let [client-cache (c/get-client-cache client-xml)
-                result       (not (nil? client-cache))]
-            (do (.close client-cache)
-                result))))
-
     (testing "Test get-cache"
-      (do (println "Running Test get-cache")
-          (let [cache  (c/get-cache server-xml)
-                result (not (nil? cache))]
-            (do (.close cache)
-                result))))))
+       (let [cache  (c/cache server-xml)
+               result (not (nil? cache))]
+           (do (.close cache)
+               result)))))
 
-(comment (deftest client-api-tests
-           (with-open [server-cache start-server-cache]
-             "Theses tests test the apis which use clientCache and require a server running"
-             (testing "Test get-client-cache")
-             ())))
 
 (comment
   (def my-cache (conjode.core/cache "/Users/smanvi/Workspace_clj/conjode/resources/geode-server.properties")))
