@@ -4,6 +4,9 @@
         "http://www.gemstone.com/dtd/cache7_0.dtd">
 <cache is-server="true">
 
+    <cache-server hostname-for-clients="CACHE_SERVER" port="8888">
+
+    </cache-server>
     <region name="Customer" refid="REPLICATE">
         <region-attributes scope="global"/>
     </region>

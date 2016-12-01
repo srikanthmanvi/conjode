@@ -11,4 +11,7 @@
 (deftest tests-that-start-server
   (conjode.core-test/test-cache-using-properties)
   (conjode.core-test/test-cache-using-xml)
+  (conjode.core-test/test-get-put)
   (is (= 1 1)))
+
+(clojure.test/run-tests 'conjode.integration-test)
