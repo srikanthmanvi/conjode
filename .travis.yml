@@ -1,2 +1,2 @@
 language: clojure
-script: lein test conjode.stand-alone-test
+script: lein test
