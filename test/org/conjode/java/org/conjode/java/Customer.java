@@ -1,3 +1,5 @@
+package org.conjode.java;
+
 import java.io.Serializable;
 
 /**
@@ -70,7 +72,7 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "Customer{" +
+        return "org.conjode.java.Customer{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
