@@ -2,8 +2,7 @@
   (:import
     (com.gemstone.gemfire.cache.client ClientCache ClientCacheFactory)
     (com.gemstone.gemfire.cache CacheFactory))
-  (:require [conjode.helper :as helper]
-            [conjode.util :as u]))
+  (:require [conjode.util :as u]))
 
 (defn client-cache
   "Returns a client cache, configured using the passed cache xml file or the properties file"

@@ -3,8 +3,7 @@
         "http://www.gemstone.com/dtd/cache8_0.dtd">
 
 <client-cache>
-    <pool name="mypool">
-        <!--<server host="localhost" port="8888"/>-->
+    <pool name="myPool">
         <locator host="localhost" port="10334"/>
     </pool>
 

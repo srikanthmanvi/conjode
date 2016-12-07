@@ -4,7 +4,7 @@
     [conjode.util :refer :all :as u])
   (:import (java.util Properties)))
 
-(def server-properties-file "resources/geode-server.properties")
+(def server-properties-file "resources/automation/server.properties")
 
 (deftest test-read-properties-file
 
