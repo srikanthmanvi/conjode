@@ -4,13 +4,14 @@
             [conjode.harness :read :all :as harness]))
 
 
-(def client-properties "resources/automation/client.properties")
-(def client-xml "resources/automation/client-cache.xml")
-
-
-(def server-properties "resources/geode-server.properties")
+(def client-properties "geode-client.properties")
+(def client-xml "client-cache.xml")
 (def server-xml "server-cache.xml")
+(def server-properties "geode-server.properties")
 
+(def function-details {:function-id "my-function"
+                       :on-region {:region-name "Customer" }
+                       :on-server false})
 
 (deftest ^:needs-server test-client-cache-using-properties                 ;needs running server
   (do (let [client-cache (c/client-cache client-properties)
@@ -49,4 +50,18 @@
       (do (c/put 1010 customer "Customer" client-cache)
           (is (= customer (c/get 1010 "Customer" client-cache)))))))
 
-;(def my-client (conjode.core/client-cache "resources/automation/client.properties"))
+(deftest ^:needs-server test-get-region-client
+  "Tests the get-region api when involked from the client side"
+  (with-open [client (c/client-cache client-properties)]
+    (is (= true (complement (nil? (c/get-region "Customer" client)))))))
+
+(deftest ^:needs-server test-execute-function
+  "Tests execute-function-on-region function"
+  (with-open [client (c/client-cache client-properties)]
+
+    (testing "Basic case, without args, without  filter"
+      (let [input-map function-details]
+        (is (= true (c/execute-function input-map client)))))))
+
+(def client (c/client-cache client-xml))
+(c/execute-function-on-servers "no-result-function" nil client)

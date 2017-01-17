@@ -1,18 +1,19 @@
 (ns conjode.core
-  (:import
-    (com.gemstone.gemfire.cache.client ClientCache ClientCacheFactory)
-    (com.gemstone.gemfire.cache CacheFactory))
-  (:require [conjode.util :as u]))
+  (:require [conjode.util :as u])
+  (:import (com.gemstone.gemfire.cache CacheFactory)
+           (com.gemstone.gemfire.cache.client ClientCache ClientCacheFactory Pool)
+           (com.gemstone.gemfire.cache.execute Execution FunctionService)))
 
 (defn client-cache
   "Returns a client cache, configured using the passed cache xml file or the properties file"
   [client-cache-file]
   (cond (.endsWith client-cache-file ".properties")
-    (.create (ClientCacheFactory. (u/read-properties-file client-cache-file)))
-    (.endsWith client-cache-file ".xml")
-    (let [factory (ClientCacheFactory.)]
-      (do (.set factory "cache-xml-file" client-cache-file)
-          (.create factory)))))
+        (.create (ClientCacheFactory. (u/read-properties-file client-cache-file)))
+        (.endsWith client-cache-file ".xml")
+        (let [factory (ClientCacheFactory.)]
+          (do (.set factory "cache-xml-file" client-cache-file)
+              (.create factory)))))
+
 
 (defn cache
   "Returns a Cache created using the passed cache.xml or geode.properties file"
@@ -38,12 +39,24 @@
     (.put region key value)))
 
 (defn get-region
-  "Returns the region from the distributed system"
+  "Returns the region handle from the client cache"
   [region-name ^ClientCache client-cache]
   (.getRegion client-cache region-name))
 
-(comment
-  (defn create-region
-    "Creates a region based on the map provided"
-    [region-config ^ClientCache client-cache]
-    (let [{:keys [region-name ref-id]} region-config])))
+(defn execute-function-on-servers
+  "executes a function on all the
+  servers in the given pool.  If the argument pool is nil, then the
+  default pool is used"
+  [function-id ^Pool pool ^ClientCache geode-client]
+  (let [execution-pool (or pool (.getDefaultPool geode-client))
+        ^Execution execution-obj (FunctionService/onServers pool)]
+    (.execute execution-obj function-id)))
+
+
+(comment (defn execute-function
+           "Executes a geode function based on the input map."
+           [function-map ^ClientCache client]
+           (cond (:on-region function-map ())
+                 (internal/execute-function-on-region function-map client)
+                 (:on-server function-map)
+                 (internal/execute-function-on-server function-map client))))
