@@ -1,10 +1,10 @@
 (ns conjode.core
   (:require [conjode.util :as u])
-  (:import (com.gemstone.gemfire.cache CacheFactory)
+  (:import (com.gemstone.gemfire.cache Region CacheFactory)
            (com.gemstone.gemfire.cache.client ClientCache ClientCacheFactory Pool)
            (com.gemstone.gemfire.cache.execute Execution FunctionService)))
 
-(defn client-cache
+(defn get-client-cache
   "Returns a client cache, configured using the passed cache xml file or the properties file"
   [client-cache-file]
   (cond (.endsWith client-cache-file ".properties")
@@ -13,7 +13,6 @@
         (let [factory (ClientCacheFactory.)]
           (do (.set factory "cache-xml-file" client-cache-file)
               (.create factory)))))
-
 
 (defn cache
   "Returns a Cache created using the passed cache.xml or geode.properties file"
@@ -25,14 +24,14 @@
           (do (.set factory "cache-xml-file" cache-config-file)
               (.create factory)))))
 
-(defn get
+(defn gget
   "Gets the value associated with the given key"
   [key region-name ^ClientCache client]
   (let [region (.getRegion client region-name)
         result (.get region key)]
     result))
 
-(defn put
+(defn gput
   "Puts key-value into the given region"
   [key value region-name ^ClientCache client]
   (let [region (.getRegion client region-name)]
@@ -42,6 +41,14 @@
   "Returns the region handle from the client cache"
   [region-name ^ClientCache client-cache]
   (.getRegion client-cache region-name))
+
+
+;; UNSUPPORTED ON SERVER SIDE
+(defn clear-region
+  "Clears the region. This function removes all the entries in the region"
+  [region-name ^ClientCache client]
+  (let [^Region region (get-region region-name client)]
+    (.clear region)))
 
 (defn execute-function-on-servers
   "executes a function on all the

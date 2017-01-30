@@ -4,23 +4,20 @@
             [conjode.harness :read :all :as harness]))
 
 
-(def client-properties "geode-client.properties")
+(def client-properties "resources/geode-client.properties")
 (def client-xml "client-cache.xml")
 (def server-xml "server-cache.xml")
-(def server-properties "geode-server.properties")
+(def server-properties "resources/geode-server.properties")
 
-(def function-details {:function-id "my-function"
-                       :on-region {:region-name "Customer" }
-                       :on-server false})
 
 (deftest ^:needs-server test-client-cache-using-properties                 ;needs running server
-  (do (let [client-cache (c/client-cache client-properties)
+  (do (let [client-cache (c/get-client-cache client-properties)
             result       (not (nil? client-cache))]
         (do (.close client-cache)
             (is (= true result))))))
 
 (deftest ^:needs-server test-client-cache-using-xml
-  (do (let [client-cache (c/client-cache client-xml)        ;needs running server
+  (do (let [client-cache (c/get-client-cache client-xml)        ;needs running server
             result       (not (nil? client-cache))]
         (do (.close client-cache)
             (is (= true result))))))
@@ -45,23 +42,20 @@
 
 (deftest ^:needs-server test-get-put
   "Tests the put and get api"
-  (with-open [client-cache (c/client-cache client-properties)]
+  (with-open [client-cache (c/get-client-cache client-properties)]
     (let [customer (harness/create-customer 1010)]
-      (do (c/put 1010 customer "Customer" client-cache)
-          (is (= customer (c/get 1010 "Customer" client-cache)))))))
+      (do (c/gput 1010 customer "Customer" client-cache)
+          (is (= customer (c/gget 1010 "Customer" client-cache)))))))
 
 (deftest ^:needs-server test-get-region-client
   "Tests the get-region api when involked from the client side"
-  (with-open [client (c/client-cache client-properties)]
-    (is (= true (complement (nil? (c/get-region "Customer" client)))))))
+  (with-open [client (c/get-client-cache client-properties)]
+    (is (not (nil? (c/get-region "Customer" client))))))
 
-(deftest ^:needs-server test-execute-function
-  "Tests execute-function-on-region function"
-  (with-open [client (c/client-cache client-properties)]
+(comment (deftest ^:needs-server test-execute-function
+           "Tests execute-function-on-region function"
+           (with-open [client (c/get-client-cache client-properties)]
 
-    (testing "Basic case, without args, without  filter"
-      (let [input-map function-details]
-        (is (= true (c/execute-function input-map client)))))))
-
-(def client (c/client-cache client-xml))
-(c/execute-function-on-servers "no-result-function" nil client)
+             (testing "Basic case, without args, without  filter"
+               (let [input-map function-details]
+                 (is (= true (c/execute-function input-map client))))))))
