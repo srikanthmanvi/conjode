@@ -59,3 +59,5 @@
              (testing "Basic case, without args, without  filter"
                (let [input-map function-details]
                  (is (= true (c/execute-function input-map client))))))))
+
+;; (execute-function-on-server "no-result-function" my-client)

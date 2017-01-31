@@ -1,8 +1,8 @@
 (ns conjode.core
   (:require [conjode.util :as u])
-  (:import (com.gemstone.gemfire.cache Region CacheFactory)
-           (com.gemstone.gemfire.cache.client ClientCache ClientCacheFactory Pool)
-           (com.gemstone.gemfire.cache.execute Execution FunctionService)))
+  (:import com.gemstone.gemfire.cache.CacheFactory
+           [com.gemstone.gemfire.cache.client ClientCache ClientCacheFactory Pool PoolManager]
+           [com.gemstone.gemfire.cache.execute Execution FunctionService]))
 
 (defn get-client-cache
   "Returns a client cache, configured using the passed cache xml file or the properties file"
@@ -43,21 +43,22 @@
   (.getRegion client-cache region-name))
 
 
-;; UNSUPPORTED ON SERVER SIDE
-(defn clear-region
-  "Clears the region. This function removes all the entries in the region"
-  [region-name ^ClientCache client]
-  (let [^Region region (get-region region-name client)]
-    (.clear region)))
+(defn- get-pool-by-name [pool-name]
+  (PoolManager/find pool-name))
 
-(defn execute-function-on-servers
-  "executes a function on all the
-  servers in the given pool.  If the argument pool is nil, then the
-  default pool is used"
-  [function-id ^Pool pool ^ClientCache geode-client]
-  (let [execution-pool (or pool (.getDefaultPool geode-client))
-        ^Execution execution-obj (FunctionService/onServers pool)]
-    (.execute execution-obj function-id)))
+(defn execute-function-on-server
+  "Executes a function on one of the servers in the given pool. The provided
+pool can a a pool name which is defined in the cache.xml or can an instance
+  of org.apache.geode.cache.client.Pool. If a pool is not provided, then the default
+ pool is used."
+
+  ([function-id pool ^ClientCache geode-client]
+   (let [execution-pool (or (when (instance? Pool pool) pool) (get-pool-by-name pool))
+         ^Execution execution-obj (FunctionService/onServers pool)]
+         (.execute execution-obj function-id)))
+
+  ([function-id ^ClientCache geode-client]
+   (execute-function-on-server function-id (.getDefaultPool geode-client) geode-client)))
 
 
 (comment (defn execute-function
