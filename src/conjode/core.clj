@@ -1,9 +1,9 @@
 (ns conjode.core
   (:require [conjode.util :as u])
-  (:import com.gemstone.gemfire.cache.CacheFactory
-           [com.gemstone.gemfire.cache.client ClientCache ClientCacheFactory Pool PoolManager]
-           [com.gemstone.gemfire.cache.execute Execution FunctionService]
-           [com.gemstone.gemfire.internal.cache.execute.NoResult]))
+  (:import
+   [org.apache.geode.cache.client ClientCache ClientCacheFactory Pool PoolManager]
+   [org.apache.geode.cache.execute Execution FunctionService]
+   [org.apache.geode.internal.cache.execute.NoResult]))
 
 (defn get-client-cache
   "Returns a client cache, configured using the passed cache xml file or the properties file"
@@ -47,7 +47,7 @@
          ^Execution execution-obj (FunctionService/onServers pool)
          results (.execute execution-obj function-id)]
      (cond
-       (instance? com.gemstone.gemfire.internal.cache.execute.NoResult results)
+       (instance? org.apache.geode.internal.cache.execute.NoResult results)
        true)))
 
   ([function-id ^ClientCache geode-client]
