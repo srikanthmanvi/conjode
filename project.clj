@@ -16,4 +16,4 @@
                    :default       (fn [m] (not (or (:needs-server m) (:starts-server m))))}
   :java-source-paths ["test/org/conjode/java"]
   :plugins [[quickie "0.4.2"]
-            [cider/cider-nrepl "0.15.0-snapshot"]])
+            [cider/cider-nrepl "0.14.0"]])
