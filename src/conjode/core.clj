@@ -2,7 +2,8 @@
   (:require [conjode.util :as u])
   (:import com.gemstone.gemfire.cache.CacheFactory
            [com.gemstone.gemfire.cache.client ClientCache ClientCacheFactory Pool PoolManager]
-           [com.gemstone.gemfire.cache.execute Execution FunctionService]))
+           [com.gemstone.gemfire.cache.execute Execution FunctionService]
+           [com.gemstone.gemfire.internal.cache.execute.NoResult]))
 
 (defn get-client-cache
   "Returns a client cache, configured using the passed cache xml file or the properties file"
@@ -12,16 +13,6 @@
         (.endsWith client-cache-file ".xml")
         (let [factory (ClientCacheFactory.)]
           (do (.set factory "cache-xml-file" client-cache-file)
-              (.create factory)))))
-
-(defn cache
-  "Returns a Cache created using the passed cache.xml or geode.properties file"
-  [cache-config-file]
-  (cond (.endsWith cache-config-file ".properties")
-        (.create (CacheFactory. (u/read-properties-file cache-config-file)))
-        (.endsWith cache-config-file ".xml")
-        (let [factory (CacheFactory.)]
-          (do (.set factory "cache-xml-file" cache-config-file)
               (.create factory)))))
 
 (defn gget
@@ -48,18 +39,19 @@
 
 (defn execute-function-on-server
   "Executes a function on one of the servers in the given pool. The provided
-pool can a a pool name which is defined in the cache.xml or can an instance
-  of org.apache.geode.cache.client.Pool. If a pool is not provided, then the default
- pool is used."
+  pool can be the pool-name of a predefined pool name or an instance
+  of org.apache.geode.cache.client.Pool. When a pool is not provided default pool used"
 
   ([function-id pool ^ClientCache geode-client]
    (let [execution-pool (or (when (instance? Pool pool) pool) (get-pool-by-name pool))
-         ^Execution execution-obj (FunctionService/onServers pool)]
-         (.execute execution-obj function-id)))
+         ^Execution execution-obj (FunctionService/onServers pool)
+         results (.execute execution-obj function-id)]
+     (cond
+       (instance? com.gemstone.gemfire.internal.cache.execute.NoResult results)
+       true)))
 
   ([function-id ^ClientCache geode-client]
    (execute-function-on-server function-id (.getDefaultPool geode-client) geode-client)))
-
 
 (comment (defn execute-function
            "Executes a geode function based on the input map."
