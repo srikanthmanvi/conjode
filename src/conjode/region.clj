@@ -20,7 +20,6 @@
 (defn get-region
   "Returns the instance of org.apache.geode.cache.Region for the
   given region-name."
-  #break
   [region-name ^ClientCache geode-client]
   (.getRegion geode-client region-name))
 
@@ -42,7 +41,6 @@
   [^Region region ^ClientCache geode-client]
   (.getFullPath region))
 
-#dbg
 (defn get-region-attributes
   "Returns the region attributes for the given region"
   [^Region region ^ClientCache geode-client]
