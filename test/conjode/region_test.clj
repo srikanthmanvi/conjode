@@ -1,6 +1,6 @@
 (ns conjode.region-test
   (:require [conjode.region :as r]
-            [clojure.test :as t]
+            [clojure.test :refer :all :as t]
             [conjode.harness :as h]))
 
 (deftest parent-region-test)

@@ -57,8 +57,3 @@
   (let [client (get-geode-client)]
     (doseq [[key val] sample-people]
       (region-ns/gput key val "Customer" client))))
-
-(doseq [[key val] sample-people]
-  (println "-----------")
-  (println "key " key)
-  (println "Value " val))
