@@ -1,6 +1,7 @@
 (ns conjode.core-test
   (:require [clojure.test :refer :all]
             [conjode.core :refer :all :as c]
+            [conjode.region :refer :all :as r]
             [conjode.harness :read :all :as harness]))
 
 
@@ -57,15 +58,15 @@
                    :lname "Doe"
                    :ssn 456}]
       (do
-        (c/gput 1 person1 "Customer" (geode-client))
-        (c/gput 2 person2 "Customer" (geode-client))
-        (is (= person1 (c/gget 1 "Customer" (geode-client))))
-        (is (= person2 (c/gget 2 "Customer" (geode-client)))))))
+        (r/gput 1 person1 "Customer" (geode-client))
+        (r/gput 2 person2 "Customer" (geode-client))
+        (is (= person1 (r/gget 1 "Customer" (geode-client))))
+        (is (= person2 (r/gget 2 "Customer" (geode-client)))))))
 
   (testing "With Java objects as values")
   (comment (let [customer (harness/create-customer 1010)]
-             (do (c/gput 1010 customer "Customer" (geode-client))
-                 (is (= customer (c/gget 1010 "Customer" (geode-client))))))))
+             (do (r/gput 1010 customer "Customer" (geode-client))
+                 (is (= customer (r/gget 1010 "Customer" (geode-client))))))))
 
 
 
@@ -73,7 +74,7 @@
   "Tests the get-region api when involked from the client side.
    Customer region is created as part of test setup in fixture"
 
-  (is (not (nil? (c/get-region "Customer" (geode-client))))))
+  (is (not (nil? (r/get-region "Customer" (geode-client))))))
 
 
 (comment (deftest ^:needs-server test-execute-function
