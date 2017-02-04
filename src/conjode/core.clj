@@ -1,9 +1,7 @@
 (ns conjode.core
   (:require [conjode.util :as u])
-  (:import
-   [org.apache.geode.cache.client ClientCache ClientCacheFactory Pool PoolManager]
-   [org.apache.geode.cache.execute Execution FunctionService]
-   [org.apache.geode.internal.cache.execute.NoResult]))
+  (:import [org.apache.geode.cache.client ClientCache ClientCacheFactory Pool PoolManager]
+           [org.apache.geode.cache.execute Execution FunctionService]))
 
 (defn get-client-cache
   "Returns a client cache, configured using the passed cache xml file or the properties file"
@@ -14,25 +12,6 @@
         (let [factory (ClientCacheFactory.)]
           (do (.set factory "cache-xml-file" client-cache-file)
               (.create factory)))))
-
-(defn gget
-  "Gets the value associated with the given key"
-  [key region-name ^ClientCache client]
-  (let [region (.getRegion client region-name)
-        result (.get region key)]
-    result))
-
-(defn gput
-  "Puts key-value into the given region"
-  [key value region-name ^ClientCache client]
-  (let [region (.getRegion client region-name)]
-    (.put region key value)))
-
-(defn get-region
-  "Returns the region handle from the client cache"
-  [region-name ^ClientCache client-cache]
-  (.getRegion client-cache region-name))
-
 
 (defn- get-pool-by-name [pool-name]
   (PoolManager/find pool-name))

@@ -63,9 +63,9 @@
         (is (= person2 (c/gget 2 "Customer" (geode-client)))))))
 
   (testing "With Java objects as values")
-  (let [customer (harness/create-customer 1010)]
-    (do (c/gput 1010 customer "Customer" (geode-client))
-        (is (= customer (c/gget 1010 "Customer" (geode-client)))))))
+  (comment (let [customer (harness/create-customer 1010)]
+             (do (c/gput 1010 customer "Customer" (geode-client))
+                 (is (= customer (c/gget 1010 "Customer" (geode-client))))))))
 
 
 

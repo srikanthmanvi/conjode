@@ -12,4 +12,7 @@
             </region>
 
     <region name="Order" refid="PROXY"/>
+    <region name="Items" refid="PROXY">
+        <region name="fmcg" refid="PROXY"/>
+    </region>
 </client-cache>
