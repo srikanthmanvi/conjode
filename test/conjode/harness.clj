@@ -25,7 +25,8 @@
         (.setAddress customer (str "Address" customer-id))) customer))
 
 (defn get-geode-client
-  "Returns a geode client created using the conjode default properties file"
+  "Returns a geode client created using the conjode default properties file.
+  If a client already exists, the same client is returned, if not a new one is returned"
   []
   (if (nil? @geode-client-atom)
     (do

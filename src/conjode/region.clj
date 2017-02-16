@@ -17,6 +17,12 @@
   (let [region (.getRegion geode-client region-name)]
     (.put region key value)))
 
+(defn gput-all
+  "Puts a map of key-value pairs in a region"
+  [m region-name ^ClientCache geode-client]
+  (let [region (.getRegion geode-client region-name)]
+    (.putAll region m)))
+
 (defn get-region
   "Returns the instance of org.apache.geode.cache.Region for the
   given region-name."
@@ -29,7 +35,7 @@
   Argument can be a string or org.apache.geode.cache.Region"
 
   [region ^ClientCache geode-client]
-  (cond (instance? ^Region region)
+  (cond (instance? org.apache.geode.cache.Region region)
         (.getParentRegion region)
         (string? region)
         (.getParentRegion (get-region region geode-client))
