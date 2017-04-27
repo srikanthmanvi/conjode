@@ -1,7 +1,7 @@
 (ns conjode.region
-  (:require [conjode.util :as util :refer :all])
-  (:import [org.apache.geode.cache.client ClientCache ClientCacheFactory Pool PoolManager]
-           [org.apache.geode.cache.execute Execution FunctionService]
+  (:require [conjode.util :as util :refer :all]
+            [conjode.util :as u])
+  (:import [org.apache.geode.cache.client ClientCache ClientCacheFactory Pool PoolManager ClientRegionFactory]
            [org.apache.geode.cache Region]))
 
 (defn gget
@@ -41,6 +41,21 @@
         (.getParentRegion (get-region region geode-client))
         :else
         (throw (IllegalArgumentException.))))
+
+(defn create-client-region
+  "Creates a region on the client side. The region exists in the client JVM
+  and not on the members of the distributed system. The region-types can be
+  one of
+  :local :local-heap-lru :proxy :caching-proxy :caching-proxy-heap-lru"
+  [region-name ^ClientCache geode-client client-region-type]
+  (if (contains? (keys (u/client-region-types)) client-region-type)
+    (let [^ClientRegionFactory client-region-factory
+          (.createClientRegionFactory geode-client (get (u/client-region-types) client-region-type))]
+      (.create client-region-factory region-name))
+    (do (str "Invalid inputs to create region")
+        :error)))
+
+
 
 (defn get-full-path
   "Returns the full path of the given region. Ex: /Customer/USCustomer."

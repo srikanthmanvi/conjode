@@ -30,7 +30,7 @@
 (use-fixtures :once once-fixture)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn- geode-client [] @geode-client-atom)
+(defn- geode-default-client [] @geode-client-atom)
 
 (comment (deftest ^:needs-server test-client-creation
 
@@ -58,15 +58,15 @@
                    :lname "Doe"
                    :ssn 456}]
       (do
-        (r/gput 1 person1 "Customer" (geode-client))
-        (r/gput 2 person2 "Customer" (geode-client))
-        (is (= person1 (r/gget 1 "Customer" (geode-client))))
-        (is (= person2 (r/gget 2 "Customer" (geode-client)))))))
+        (r/gput 1 person1 "Customer" (geode-default-client))
+        (r/gput 2 person2 "Customer" (geode-default-client))
+        (is (= person1 (r/gget 1 "Customer" (geode-default-client))))
+        (is (= person2 (r/gget 2 "Customer" (geode-default-client)))))))
 
   (testing "With Java objects as values")
   (comment (let [customer (harness/create-customer 1010)]
-             (do (r/gput 1010 customer "Customer" (geode-client))
-                 (is (= customer (r/gget 1010 "Customer" (geode-client))))))))
+             (do (r/gput 1010 customer "Customer" (geode-default-client))
+                 (is (= customer (r/gget 1010 "Customer" (geode-default-client))))))))
 
 
 
@@ -74,7 +74,7 @@
   "Tests the get-region api when involked from the client side.
    Customer region is created as part of test setup in fixture"
 
-  (is (not (nil? (r/get-region "Customer" (geode-client))))))
+  (is (not (nil? (r/get-region "Customer" (geode-default-client))))))
 
 
 (comment (deftest ^:needs-server test-execute-function
