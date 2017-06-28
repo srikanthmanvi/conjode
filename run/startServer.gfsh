@@ -1,0 +1,3 @@
+start locator --name=locator1
+start server --name=geode-server1 --properties-file=geode-server.properties --server-port=0
+start server --name=geode-server2 --properties-file=geode-server.properties --server-port=0
