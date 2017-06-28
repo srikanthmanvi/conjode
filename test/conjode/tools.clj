@@ -1,6 +1,7 @@
 (ns conjode.tools
   (:require [conjode.core :refer :all :as c]
-            [conjode.harness :refer :all :as harness])
+            [conjode.harness :refer :all :as harness]
+            [conjode.region :refer :all :as r])
   (:import [org.conjode.java Customer]))
 
 (comment
@@ -25,3 +26,8 @@
 
 
 (comment (c/cache-from-xml "server-cache.xml"))
+
+(comment (let [client (conjode.harness/get-geode-client)
+               m {"1" "one" "2" "Two" "3" "Three" "4" "Four" "5" "Five"}]
+           (do
+             (r/gput-all m "Customer" client))))

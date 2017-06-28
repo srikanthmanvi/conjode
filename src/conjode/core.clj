@@ -1,6 +1,6 @@
 (ns conjode.core
   (:require [conjode.util :as u])
-  (:import [org.apache.geode.cache.client ClientCache ClientCacheFactory Pool PoolManager]))
+  (:import [com.gemstone.gemfire.cache ClientCache ClientCacheFactory Pool PoolManager]))
 
 (defn get-client-cache
   "Returns a client cache, configured using the passed cache xml file or the properties file"
