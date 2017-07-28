@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.apache.geode/geode-core "1.1.0"]
+                 [org.apache.geode/geode-core "1.2.0"]
                  ;[com.gemstone.gemfire/gemfire "8.0.0"]
                  ]
   :test-selectors {:needs-server  :needs-server

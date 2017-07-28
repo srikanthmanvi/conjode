@@ -4,11 +4,10 @@
 
 <client-cache>
     <pool name="mypool">
-        <!--<server host="localhost" port="8888"/>-->
         <locator host="localhost" port="10334"/>
     </pool>
 
-    <region name="Customer" refid="PROXY">
+    <region name="CustomerRegion" refid="CACHING_PROXY">
             </region>
 
     <region name="Order" refid="PROXY"/>

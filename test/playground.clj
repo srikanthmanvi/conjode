@@ -5,9 +5,9 @@
 
 ;Namespace to quickly run conjode functions
 
-(def default-client (harness/get-geode-client))
-(conjode.region/gput "333" "hello" "Customer" default-client)
-(conjode.region/gget "333" "Customer" default-client)
+;(def default-client (harness/get-geode-client))
+;(conjode.region/gput "333" "hello" "Customer" default-client)
+;(conjode.region/gget "333" "Customer" default-client)
 
 
 

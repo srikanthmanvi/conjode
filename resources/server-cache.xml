@@ -4,9 +4,7 @@
         "http://www.gemstone.com/dtd/cache7_0.dtd">
 <cache is-server="true">
 
-    <region name="Customer" refid="REPLICATE">
-        <region-attributes scope="global"/>
-    </region>
+    <region name="CustomerRegion" refid="PARTITION"/>
 
     <region name="Order">
         <region-attributes

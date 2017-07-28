@@ -26,4 +26,10 @@
   (if (instance? org.apache.geode.cache.Region region)
     true
     (throw (IllegalArgumentException.
-            (str "Passed argument " region " is not of type org.apache.geode.cache.Region")))))
+             (str "Passed argument " region " is not of type org.apache.geode.cache.Region")))))
+
+(defn unkeyword [key]
+  "If the key is a keyword, returns a string otherwise returns key"
+  (if (keyword? key)
+    (name key)
+    key))
