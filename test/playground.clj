@@ -11,3 +11,17 @@
 
 
 
+(def details {:fname "srikanth" :lname "manvi"})
+
+;(defn look-up
+;  "docstring"
+;  [look-up-key]
+;  ((keyword look-up-key) details))
+
+(defn look-up
+  "docstring"
+  [look-up-key]
+  (look-up-key details))
+
+
+(look-up :fname)

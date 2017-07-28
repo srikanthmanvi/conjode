@@ -1,5 +1,6 @@
 (ns conjode.region
-  (:require [conjode.util :as util :refer :all])
+  (:require [conjode.util :as util :refer :all]
+            [conjode.core :as c :refer :all])
   (:import [org.apache.geode.cache.client ClientCache ClientCacheFactory Pool PoolManager ClientRegionFactory]
            [org.apache.geode.cache Region]))
 
@@ -61,23 +62,25 @@
 
 (defn create-client-region
   "Creates a region on the client side. The region exists in the client JVM
-  and not on the members of the distributed system. The region-types can be
-  one of
-  :local :local-heap-lru :proxy :caching-proxy :caching-proxy-heap-lru"
-  [region-name ^ClientCache geode-client client-region-type]
-  (if (contains? (keys (util/client-region-types)) client-region-type)
-    (let [^ClientRegionFactory client-region-factory
-          (.createClientRegionFactory geode-client (get (util/client-region-types) client-region-type))]
-      (.create client-region-factory region-name))
-    (do (str "Invalid inputs to create region")
-        :error)))
+  and not on the servers of the distributed system, unless the same region exists on the server side and
+  the type of the client region being created is PROXY or CACHING_PROXY. The region-types can be
+  one of below
 
+  :local, only has local state and never sends operations to a server.
+  :proxy, has no local state and forwards all operations to a server.
+  :caching-proxy, has local state but can also send operations to a server. "
 
+  ([region-name ^ClientCache geode-client region-type]
+   (if (contains? util/client-region-types (keyword region-type))
+     (let [^ClientRegionFactory client-region-factory
+           (.createClientRegionFactory geode-client ((keyword region-type) util/client-region-types))]
+       (.create client-region-factory region-name))
+     (do (str "Invalid region-type. Only :local :proxy :caching-proxy are supported")
+         :error)))
 
-(defn get-full-path
-  "Returns the full path of the given region. Ex: /Customer/USCustomer."
-  [^Region region ^ClientCache geode-client]
-  (.getFullPath region))
+  ([region-name region-type]
+   (create-client-region region-name (c/connection) region-type)))
+
 
 (defn get-region-attributes
   "Returns the region attributes for the given region"
