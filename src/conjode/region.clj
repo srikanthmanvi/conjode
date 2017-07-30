@@ -12,7 +12,9 @@
   PROXY regions will return 0."
   [region-name ^ClientCache geode-client]
   (let [^Region region (.getRegion geode-client region-name)]
-    (.size region)))
+    (if (nil? region)
+      {:error (str "Region " region-name " does not exist")}
+      (.size region))))
 
 
 (defn gget
@@ -70,13 +72,13 @@
   :proxy, has no local state and forwards all operations to a server.
   :caching-proxy, has local state but can also send operations to a server. "
 
-  ([region-name ^ClientCache geode-client region-type]
+  ([region-name region-type ^ClientCache geode-client]
    (if (contains? util/client-region-types (keyword region-type))
      (let [^ClientRegionFactory client-region-factory
            (.createClientRegionFactory geode-client ((keyword region-type) util/client-region-types))]
        (.create client-region-factory region-name))
-     (do (str "Invalid region-type. Only :local :proxy :caching-proxy are supported")
-         :error)))
+     {:error (str "Invalid region-type.
+              Only :local :proxy :caching-proxy are supported")}))
 
   ([region-name region-type]
    (create-client-region region-name (c/connection) region-type)))

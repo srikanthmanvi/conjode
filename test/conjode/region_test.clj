@@ -1,9 +1,32 @@
 (ns conjode.region-test
   (:require [clojure.test :as t :refer :all]
             [conjode
-             [harness :as h]
-             [region :as r]])
-  (:import org.apache.geode.cache.Region))
+             ;[harness :as h]
+             [region :as r]
+             [core :as core]])
+  (:import org.apache.geode.cache.Region
+           (org.apache.geode.cache RegionExistsException)))
+
+(deftest create-client-region-test
+  (let [test-client (core/connect)]
+
+    (testing "Testing local region creation"
+      (do
+        (r/create-client-region "local-region" :local test-client)
+        (is (= 0 (r/size "local-region" test-client)))))
+
+    (testing "Testing proxy region creation"
+      (do
+        (r/create-client-region "proxy-region" :proxy test-client)
+        (is (= 0 (r/size "proxy-region" test-client)))))
+
+    (testing "Testing caching-proxy region creation"
+      (do
+        (r/create-client-region "caching-proxy-region" :caching-proxy test-client)
+        (is (= 0 (r/size "caching-proxy-region" test-client)))))
+
+    (testing "Testing creating already existing region"
+      (is (thrown? RegionExistsException (r/size "caching-proxy-region" test-client))))))
 
 
 (comment
