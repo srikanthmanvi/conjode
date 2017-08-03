@@ -77,11 +77,10 @@
      (let [^ClientRegionFactory client-region-factory
            (.createClientRegionFactory geode-client ((keyword region-type) util/client-region-types))]
        (.create client-region-factory region-name))
-     {:error (str "Invalid region-type.
-              Only :local :proxy :caching-proxy are supported")}))
+     {:error (str "Invalid region-type. Only :local :proxy :caching-proxy are supported")}))
 
   ([region-name region-type]
-   (create-client-region region-name (c/connection) region-type)))
+   (create-client-region region-name @c/connection region-type)))
 
 
 (defn get-region-attributes

@@ -7,26 +7,41 @@
   (:import org.apache.geode.cache.Region
            (org.apache.geode.cache RegionExistsException)))
 
+
+(defn once-fixture
+  "Setup and Tear down which run once per namespace"
+  [f]
+  ;(core/connect)
+  (f)
+  (core/close-client))
+
+
+(use-fixtures :once once-fixture)
+
+
+
+
 (deftest create-client-region-test
   (let [test-client (core/connect)]
 
-    (testing "Testing local region creation"
+    (testing "Testing local region creation. Region does not exist on server"
       (do
         (r/create-client-region "local-region" :local test-client)
         (is (= 0 (r/size "local-region" test-client)))))
 
     (testing "Testing proxy region creation"
       (do
-        (r/create-client-region "proxy-region" :proxy test-client)
-        (is (= 0 (r/size "proxy-region" test-client)))))
+        (r/create-client-region "ccr-proxy-region" :proxy test-client)
+        (is (= 0 (r/size "ccr-proxy-region" test-client)))))
 
     (testing "Testing caching-proxy region creation"
       (do
-        (r/create-client-region "caching-proxy-region" :caching-proxy test-client)
-        (is (= 0 (r/size "caching-proxy-region" test-client)))))
+        (r/create-client-region "ccr-caching-proxy-region" :caching-proxy test-client)
+        (is (= 0 (r/size "ccr-caching-proxy-region" test-client)))))
 
-    (testing "Testing creating already existing region"
-      (is (thrown? RegionExistsException (r/size "caching-proxy-region" test-client))))))
+    (testing "Testing invalid region type"
+      (let [result (r/create-client-region "DummyRegion" :not-supported-type test-client)]
+        (is (= true (and (= (:error result) "Invalid region-type. Only :local :proxy :caching-proxy are supported"))))))))
 
 
 (comment
@@ -61,3 +76,4 @@
           test-region (r/get-region "Items/fmcg" geode-client)
           result-region (r/get-parent-region test-region geode-client)]
       (is (= "Items" (.getName result-region))))))
+

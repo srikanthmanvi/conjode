@@ -1,3 +1,8 @@
 start locator --name=locator1
 start server --name=geode-server1 --properties-file=../resources/geode-server.properties --server-port=0
 create region --name="CustomerRegion" --type=REPLICATE
+
+
+# For testing conjode.region/create-client-region
+create region --name="ccr-proxy-region" --type=REPLICATE
+create region --name="ccr-caching-proxy-region" --type=PARTITION

@@ -32,4 +32,4 @@
   "close the given client cache. when none provided, closes the default client cache"
   ([^ClientCache connection]
    (.close connection))
-  ([] (.close connection)))
+  ([] (.close @connection)))
