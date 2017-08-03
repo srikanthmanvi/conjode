@@ -1,6 +1,7 @@
 (ns conjode.region
   (:require [conjode.util :as util :refer :all]
-            [conjode.core :as c :refer :all])
+            [conjode.core :as c :refer :all]
+            [clojure.string :as string])
   (:import [org.apache.geode.cache.client ClientCache ClientCacheFactory Pool PoolManager ClientRegionFactory]
            [org.apache.geode.cache Region]))
 
@@ -9,13 +10,12 @@
   "Returns the number of entries present in this region. For DataPolicy.PARTITION,
   this is a distributed operation that returns the number of entries present in entire region.
   For all other types of regions, it returns the number of entries present locally, and it is not a distributed operation.
-  PROXY regions will return 0."
+  PROXY regions will return 0 as no entries are stored locally on the client."
   [region-name ^ClientCache geode-client]
   (let [^Region region (.getRegion geode-client region-name)]
     (if (nil? region)
       {:error (str "Region " region-name " does not exist")}
       (.size region))))
-
 
 (defn gget
   "Gets the value associated with the given key. Key can be a keyword or a literal"
@@ -28,7 +28,9 @@
   "Puts key-value into the given region. Key can be a keyword or a literal."
   [key value region-name ^ClientCache geode-client]
   (let [region (.getRegion geode-client region-name)]
-    (.put region (util/unkeyword key) value)))
+    (if (nil? region)
+      {:error (str "Region " (string/upper-case region-name) " not found.")}
+      (.put region (util/unkeyword key) value))))
 
 ;todo: Handle keywords
 (defn gput-all
@@ -82,6 +84,27 @@
   ([region-name region-type]
    (create-client-region region-name @c/connection region-type)))
 
+(defn destroy-client-region
+
+  "Destroys the whole region. Destroy cascades to all entries and subregions.
+   After the destroy, this region object can not be used any more and any attempt
+   to use this region object will get RegionDestroyedException.
+   The region destroy will be distributed to other caches if the scope is not Scope.LOCAL.
+   Applicable to both server and client side regions."
+
+  [region-name ^ClientCache geode-client]
+  (let [^Region region (conjode.internal/region-from-name region-name geode-client)]
+    (.destroyRegion region)))
+
+(defn clear-region
+  "Removes all entries from this region.
+  Clear will be distributed to other caches if the scope is not Scope.LOCAL.
+  Applicable to both server and client side regions."
+  [region-name ^ClientCache geode-client]
+  (let [^Region region (conjode.internal/region-from-name region-name geode-client)]
+    (if (nil? region)
+      {:error "Region not found"}
+      (.clear region))))
 
 (defn get-region-attributes
   "Returns the region attributes for the given region"

@@ -13,10 +13,11 @@
   [f]
   ;(core/connect)
   (f)
-  (core/close-client))
+  (core/close-client)
+  )
 
 
-(use-fixtures :once once-fixture)
+(use-fixtures :each once-fixture)
 
 
 
@@ -77,3 +78,38 @@
           result-region (r/get-parent-region test-region geode-client)]
       (is (= "Items" (.getName result-region))))))
 
+
+(deftest destroy-client-region-test
+  (let [test-client (core/connect)]
+
+    (testing " Testing local region destroy"
+      (do
+        (r/create-client-region "dcr-region" :local test-client)
+        (r/gput 1 "AA" "dcr-region" test-client)
+        (r/destroy-client-region "dcr-region" test-client)
+        (let [result (r/gput 2 "BB" "dcr-region" test-client)]
+          (is (contains? result :error))
+          (is (= "Region DCR-REGION not found." (:error result))))))
+
+    (testing " Testing proxy region destroy"
+      (do
+        (r/create-client-region "dcr-partition-region" :proxy test-client)
+        (r/gput 1 "AA" "dcr-partition-region" test-client)
+        (r/destroy-client-region "dcr-partition-region" test-client)
+        (let [result (r/gput 2 "BB" "dcr-partition-region" test-client)]
+          (is (contains? result :error))
+          (is (= "Region DCR-PARTITION-REGION not found." (:error result))))))
+    ))
+
+
+(deftest clear-region-test
+  (let [test-client (core/connect)]
+
+    (testing "Testing clear valid region"
+      (do
+        (r/create-client-region "cr-region" :local test-client)
+        (r/gput 1 "AA" "cr-region" test-client)
+        (r/gput 2 "BB" "cr-region" test-client)
+        ;(is (= 2 (r/size "cr-region" test-client)))
+        (r/clear-region "cr-region" test-client)
+        (is (= 0 (r/size "cr-region" test-client)))))))

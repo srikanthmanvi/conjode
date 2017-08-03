@@ -6,3 +6,6 @@ create region --name="CustomerRegion" --type=REPLICATE
 # For testing conjode.region/create-client-region
 create region --name="ccr-proxy-region" --type=REPLICATE
 create region --name="ccr-caching-proxy-region" --type=PARTITION
+
+# For testing conjode.region/destroy-client-region
+create region --name=/dcr-partition-region --type=PARTITION
