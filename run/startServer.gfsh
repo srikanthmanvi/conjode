@@ -9,3 +9,6 @@ create region --name="ccr-caching-proxy-region" --type=PARTITION
 
 # For testing conjode.region/destroy-client-region
 create region --name=/dcr-partition-region --type=PARTITION
+
+# For testing conjode.region/clear-region
+create region --name=/cr-partition-region --type=PARTITION

@@ -3,7 +3,8 @@
             [conjode
              ;[harness :as h]
              [region :as r]
-             [core :as core]])
+             [core :as core]]
+            [conjode.core :as c])
   (:import org.apache.geode.cache.Region
            (org.apache.geode.cache RegionExistsException)))
 
@@ -13,13 +14,10 @@
   [f]
   ;(core/connect)
   (f)
-  (core/close-client)
-  )
+  (core/close-client))
 
 
 (use-fixtures :each once-fixture)
-
-
 
 
 (deftest create-client-region-test
@@ -45,15 +43,44 @@
         (is (= true (and (= (:error result) "Invalid region-type. Only :local :proxy :caching-proxy are supported"))))))))
 
 
-(comment
-  (deftest get-put-test
-    "Tests simple get and put functionality"
-    (let [geode-client (conjode.harness/get-geode-client)]
+(deftest get-put-test
+  "Tests simple get and put functionality"
 
-      (testing "gput and gget of simple String keys and Values"
+  (testing "Testing get-put"
+    (let [test-client (c/connect)]
+
+      (testing "Using ^Region"
         (do
-          (conjode.region/gput "007" "Mr.Bond" "Customer" geode-client)
-          (is (= "Mr.Bond" (conjode.region/gget "007" "Customer" geode-client))))))))
+          (let [region (r/create-client-region "gp-region" :local test-client)]
+
+            (testing "Keyword keys"
+              (r/gput :a "AAA" region)
+              (is (= "AAA" (r/gget :a region))))
+
+            (testing "String Keys"
+              (r/gput "A" "AAA" region)
+              (is (= "AAA" (r/gget "A" region))))
+
+            (testing "Integer Keys"
+              (r/gput 1 "AAA" region)
+              (is (= "AAA" (r/gget 1 region)))))))
+
+      (testing "Using region-name"
+        (do
+          (let [region-name "my-region"]
+            (r/create-client-region region-name :local test-client)
+
+            (testing "Keyword keys"
+              (r/gput :a "AAA" "my-region" test-client)
+              (is (= "AAA" (r/gget :a region-name test-client))))
+
+            (testing "String Keys"
+              (r/gput "A" "AAA" region-name test-client)
+              (is (= "AAA" (r/gget "A" region-name test-client))))
+
+            (testing "Integer Keys"
+              (r/gput 1 "AAA" region-name test-client)
+              (is (= "AAA" (r/gget 1 region-name test-client))))))))))
 
 (comment (deftest put-all-test
            "Tests the gput-all api"
@@ -79,37 +106,52 @@
       (is (= "Items" (.getName result-region))))))
 
 
-(deftest destroy-client-region-test
-  (let [test-client (core/connect)]
+(comment (deftest destroy-client-region-test
+           (let [test-client (core/connect)]
 
-    (testing " Testing local region destroy"
-      (do
-        (r/create-client-region "dcr-region" :local test-client)
-        (r/gput 1 "AA" "dcr-region" test-client)
-        (r/destroy-client-region "dcr-region" test-client)
-        (let [result (r/gput 2 "BB" "dcr-region" test-client)]
-          (is (contains? result :error))
-          (is (= "Region DCR-REGION not found." (:error result))))))
+             (testing " Testing local region destroy"
+               (do
+                 (r/create-client-region "dcr-region" :local test-client)
+                 (r/gput 1 "AA" "dcr-region" test-client)
+                 (r/destroy-client-region "dcr-region" test-client)
+                 (let [result (r/gput 2 "BB" "dcr-region" test-client)]
+                   (is (contains? result :error))
+                   (is (= "Region DCR-REGION not found." (:error result))))))
 
-    (testing " Testing proxy region destroy"
-      (do
-        (r/create-client-region "dcr-partition-region" :proxy test-client)
-        (r/gput 1 "AA" "dcr-partition-region" test-client)
-        (r/destroy-client-region "dcr-partition-region" test-client)
-        (let [result (r/gput 2 "BB" "dcr-partition-region" test-client)]
-          (is (contains? result :error))
-          (is (= "Region DCR-PARTITION-REGION not found." (:error result))))))
-    ))
+             (testing " Testing proxy region destroy"
+               (do
+                 (r/create-client-region "dcr-partition-region" :proxy test-client)
+                 (r/gput 1 "AA" "dcr-partition-region" test-client)
+                 (r/destroy-client-region "dcr-partition-region" test-client)
+                 (let [result (r/gput 2 "BB" "dcr-partition-region" test-client)]
+                   (is (contains? result :error))
+                   (is (= "Region DCR-PARTITION-REGION not found." (:error result))))))
+             )))
 
 
 (deftest clear-region-test
   (let [test-client (core/connect)]
 
-    (testing "Testing clear valid region"
+    (testing "Testing clear local valid region"
       (do
         (r/create-client-region "cr-region" :local test-client)
         (r/gput 1 "AA" "cr-region" test-client)
         (r/gput 2 "BB" "cr-region" test-client)
-        ;(is (= 2 (r/size "cr-region" test-client)))
+        (is (= 2 (r/size "cr-region" test-client)))
         (r/clear-region "cr-region" test-client)
-        (is (= 0 (r/size "cr-region" test-client)))))))
+        (is (= 0 (r/size "cr-region" test-client)))))
+
+    (testing "Testing clear local INVALID region"
+      (let [result (r/clear-region "non-existent-region" test-client)]
+        (is (contains? result :error))
+        (is (= "Region not found" (:error result)))))))
+
+(deftest empty?-test
+  (testing "Testing Empty Case"
+    (let [test-client (core/connect)
+          ^Region my-region (r/create-client-region "dummy-region" :local test-client)]
+      (do
+        (is (= true (r/empty-region? my-region)))
+        (do
+          (r/gput 1 "AA" "dummy-region" test-client)
+          (is (= false (r/empty-region? my-region))))))))
