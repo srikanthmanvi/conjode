@@ -12,16 +12,20 @@
   this is a distributed operation that returns the number of entries present in entire region.
   For all other types of regions, it returns the number of entries present locally, and it is not a distributed operation.
   PROXY regions will return 0 as no entries are stored locally on the client."
-  [region-name ^ClientCache geode-client]
-  (let [^Region region (.getRegion geode-client region-name)]
-    (if (nil? region)
-      {:error (str "Region " region-name " does not exist")}
-      (.size region))))
+
+  ([^Region region]
+   (.size region))
+
+  ([region-name ^ClientCache geode-client]
+   (let [^Region region (.getRegion geode-client region-name)]
+     (if (nil? region)
+       {:error (str "Region " region-name " does not exist")}
+       (size region)))))
 
 (defn gget
   "Gets the value associated with the given key. Key can be a keyword or a literal"
   ([key region-name ^ClientCache geode-client]
-   (gget key (.getRegion geode-client region-name)))
+   (gget (util/unkeyword key) (.getRegion geode-client region-name)))
 
   ([key ^Region region]
     (if (nil? region)
@@ -29,27 +33,28 @@
       (.get region (util/unkeyword key)))))
 
 (defn gput
-  "Puts key-value into the given region. Key can be a keyword or a literal."
+  "Puts key-value into the given region. Key can keywords, objects or literals."
   ([key value region-name ^ClientCache geode-client]
-   (gput key value (.getRegion geode-client region-name) geode-client))
+   (gput key value (.getRegion geode-client region-name)))
 
   ([key value ^Region region]
    (if (nil? region)
      {:error (str "Region not found")}
      (.put region (util/unkeyword key) value))))
 
-;todo: Handle keywords
 (defn gput-all
   "Puts a map of key-value pairs in a region"
-  [m region-name ^ClientCache geode-client]
-  (let [region (.getRegion geode-client region-name)]
-    (.putAll region m)))
 
-;todo:
+  ([m ^Region region]
+   (.putAll region (clojure.walk/stringify-keys m)))
+
+  ([m region-name ^ClientCache geode-client]
+   (gput-all (clojure.walk/stringify-keys m) (.getRegion geode-client region-name))))
+
 (defn ggetAll
   "Gets the values for all the keys in the collection"
-  [keys]
-  true)
+  ([keys ^Region region]
+    (.getAll region (map #(util/unkeyword %) keys))))
 
 (defn get-region
   "Returns the instance of org.apache.geode.cache.Region for the

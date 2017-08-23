@@ -6,7 +6,8 @@
              [core :as core]]
             [conjode.core :as c])
   (:import org.apache.geode.cache.Region
-           (org.apache.geode.cache RegionExistsException)))
+           (org.apache.geode.cache RegionExistsException)
+           (org.conjode.java Customer)))
 
 
 (defn once-fixture
@@ -53,9 +54,11 @@
         (do
           (let [region (r/create-client-region "gp-region" :local test-client)]
 
-            (testing "Keyword keys"
+            (testing "Keyword keys and values"
               (r/gput :a "AAA" region)
-              (is (= "AAA" (r/gget :a region))))
+              (r/gput :b :bvalue region)
+              (is (= "AAA" (r/gget :a region)))
+              (is (= :bvalue (r/gget :b region))))
 
             (testing "String Keys"
               (r/gput "A" "AAA" region)
@@ -63,7 +66,12 @@
 
             (testing "Integer Keys"
               (r/gput 1 "AAA" region)
-              (is (= "AAA" (r/gget 1 region)))))))
+              (is (= "AAA" (r/gget 1 region))))
+
+            (testing "Integer keys and Object as value"
+              (let [customer-obj (Customer. "fname" "lname" 12345678)]
+                (r/gput 2 customer-obj region)
+                (is (= customer-obj (r/gget 2 region))))))))
 
       (testing "Using region-name"
         (do
@@ -80,15 +88,25 @@
 
             (testing "Integer Keys"
               (r/gput 1 "AAA" region-name test-client)
-              (is (= "AAA" (r/gget 1 region-name test-client))))))))))
+              (is (= "AAA" (r/gget 1 region-name test-client))))
 
-(comment (deftest put-all-test
-           "Tests the gput-all api"
-           (let [m {1 "abc" 2 "cde" 3 "efg" 4 "hij" 5 "klm"}
-                 region "Customer"]
-             (do
-               (r/gput-all m region (h/get-geode-client))
-               (is (= "klm" (r/gget 5 region (h/get-geode-client))))))))
+            (testing "Integer keys and Object as value"
+              (let [customer-obj (Customer. "fname" "lname" 12345678)]
+                (r/gput 2 customer-obj region-name test-client)
+                (is (= customer-obj (r/gget 2 region-name test-client)))))))))))
+
+(deftest put-get-all-test
+  "Tests the gput-all api"
+  (let [m {1 "abc" 2 "cde" :three "three" "four" "FOUR" 5 "klm"}
+        test-client (c/connect)
+        region (r/create-client-region "put-all-region" :local test-client)]
+    (do
+      (r/gput-all m region)
+      (is (= 5 (r/size region)))
+      (is (= "klm" (r/gget 5 region)))
+      (is (= "three" (r/gget :three region)))
+      (is (= "FOUR" (r/gget "four" region)))
+      (is (= {1 "abc" 2 "cde" "four" "FOUR" 5 "klm"} (r/ggetAll #{1 2 "four" 5} region))))))
 
 (comment (deftest get-region-test
            "Tests the get-region api which takes a region name and
@@ -155,3 +173,5 @@
         (do
           (r/gput 1 "AA" "dummy-region" test-client)
           (is (= false (r/empty-region? my-region))))))))
+
+

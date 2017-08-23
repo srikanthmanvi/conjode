@@ -27,7 +27,7 @@
              (str "Passed argument " region " is not of type org.apache.geode.cache.Region")))))
 
 (defn unkeyword [key]
-  "If the key is a keyword, returns a string otherwise returns key"
+  "returns string if key is keyword."
   (if (keyword? key)
     (name key)
     key))

@@ -12,6 +12,7 @@ public class Customer implements Serializable {
     String address;
     String state;
     int age;
+    int ssn;
 
     //Needed for serialization
     public Customer() {
@@ -24,10 +25,10 @@ public class Customer implements Serializable {
         this.age = age;
     }
 
-    public Customer(String firstName, String lastName, String address) {
+    public Customer(String firstName, String lastName, int ssn) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.address = address;
+        this.ssn = ssn;
     }
 
     public int getAge() {
@@ -72,12 +73,13 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "org.conjode.java.Customer{" +
+        return "Customer{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
                 ", state='" + state + '\'' +
                 ", age=" + age +
+                ", ssn=" + ssn +
                 '}';
     }
 
@@ -89,11 +91,14 @@ public class Customer implements Serializable {
         Customer customer = (Customer) o;
 
         if (age != customer.age) return false;
-        if (firstName != null ? !firstName.equals(customer.firstName) : customer.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(customer.lastName) : customer.lastName != null) return false;
-        if (address != null ? !address.equals(customer.address) : customer.address != null) return false;
+        if (ssn != customer.ssn) return false;
+        if (firstName != null ? !firstName.equals(customer.firstName) : customer.firstName != null)
+            return false;
+        if (lastName != null ? !lastName.equals(customer.lastName) : customer.lastName != null)
+            return false;
+        if (address != null ? !address.equals(customer.address) : customer.address != null)
+            return false;
         return state != null ? state.equals(customer.state) : customer.state == null;
-
     }
 
     @Override
@@ -103,6 +108,7 @@ public class Customer implements Serializable {
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + age;
+        result = 31 * result + ssn;
         return result;
     }
 }
