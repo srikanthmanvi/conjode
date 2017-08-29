@@ -25,7 +25,7 @@ Get a geode client which connects to a Geode cluster running on defaults on loca
 ;get can take java/clojure literals and clojure keywords as keys
 (conjode.region/gget 1 customer-region) ;=>"AA"
 (conjode.region/gget "fName customer-region) ;=>"John"
-(conjode.region/gget :lanme customer-region) ;=>"Doe"
+(conjode.region/gget :lname customer-region) ;=>"Doe"
 (conjode.region/gget :sex customer-region) ;=>:male
 
 Note: If clojure keywords are to be stored in geode then clojure.jar should be on the Geode server class path.
