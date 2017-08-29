@@ -1,5 +1,5 @@
-start locator --name=locator1
-start server --name=geode-server1 --properties-file=../resources/geode-server.properties --server-port=0
+start locator --name=locator1 --classpath=/Users/smanvi/Software/clojure-1.8.0/clojure-1.8.0.jar
+start server --name=geode-server1 --classpath=/Users/smanvi/Software/clojure-1.8.0/clojure-1.8.0.jar --properties-file=../resources/geode-server.properties --server-port=0
 create region --name="CustomerRegion" --type=REPLICATE
 
 

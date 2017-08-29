@@ -1,8 +1,7 @@
 (ns conjode.region
   (:require [conjode.util :as util :refer :all]
             [conjode.core :as c :refer :all]
-            [conjode.internal :as i :refer :all]
-            [clojure.string :as string])
+            [conjode.internal :as i :refer :all])
   (:import [org.apache.geode.cache.client ClientCache ClientCacheFactory Pool PoolManager ClientRegionFactory]
            [org.apache.geode.cache Region]))
 
@@ -25,12 +24,14 @@
 (defn gget
   "Gets the value associated with the given key. Key can be a keyword or a literal"
   ([key region-name ^ClientCache geode-client]
-   (gget (util/unkeyword key) (.getRegion geode-client region-name)))
+   ;(gget (util/unkeyword key) (.getRegion geode-client region-name)))
+   (gget key (.getRegion geode-client region-name)))
 
   ([key ^Region region]
     (if (nil? region)
       {:error (str "Region not found")}
-      (.get region (util/unkeyword key)))))
+      ;(.get region (util/unkeyword key)))))
+      (.get region key))))
 
 (defn gput
   "Puts key-value into the given region. Key can keywords, objects or literals."
@@ -40,21 +41,22 @@
   ([key value ^Region region]
    (if (nil? region)
      {:error (str "Region not found")}
-     (.put region (util/unkeyword key) value))))
+     ;(.put region (util/unkeyword key) value))))
+     (.put region key value))))
 
 (defn gput-all
   "Puts a map of key-value pairs in a region"
 
   ([m ^Region region]
-   (.putAll region (clojure.walk/stringify-keys m)))
+   (.putAll region m))
 
   ([m region-name ^ClientCache geode-client]
-   (gput-all (clojure.walk/stringify-keys m) (.getRegion geode-client region-name))))
+   (gput-all m (.getRegion geode-client region-name))))
 
 (defn ggetAll
   "Gets the values for all the keys in the collection"
   ([keys ^Region region]
-    (.getAll region (map #(util/unkeyword %) keys))))
+    (.getAll region keys)))
 
 (defn get-region
   "Returns the instance of org.apache.geode.cache.Region for the
@@ -63,7 +65,7 @@
   (.getRegion geode-client region-name))
 
 (defn get-parent-region
-  "Geode regions can be nested. This funtion returns the parent region
+  "Geode regions can be nested. This function returns the parent region
   for the given region. Return type is org.apache.geode.cache.Region.
   Argument can be a string or org.apache.geode.cache.Region"
 
@@ -129,11 +131,11 @@
       {:error (str "Region is nil")}
       (.isEmpty region))))
 
-(defn get-region-attributes
-  "Returns the region attributes for the given region"
-  [^Region region ^ClientCache geode-client]
-  (util/ensure-region region)
-  (.getAttributes region))
+(defn values
+  "values in the client side region. Returns no records for :proxy region"
+  ([^Region region]
+    (.values region))
 
-(when-let [aa false]
-  (print aa))
+  ([region-name ^ClientCache geode-client]
+    (values (get-region region-name geode-client))))
+

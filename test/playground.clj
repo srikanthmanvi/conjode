@@ -1,9 +1,11 @@
 (ns playground
-  (:require [conjode.core :as core]
-            [conjode.region :as region]
-            [conjode.harness :as harness]))
+  (:require [conjode.core :as c]
+            [conjode.region :as r]))
 
 ;Namespace to quickly run conjode functions
+
+(def my-client (c/connect))
+(def my-region (r/get-region "CustomerRegion" my-client))
 
 ;(def default-client (harness/get-geode-client))
 ;(conjode.region/gput "333" "hello" "Customer" default-client)
@@ -11,17 +13,3 @@
 
 
 
-(def details {:fname "srikanth" :lname "manvi"})
-
-;(defn look-up
-;  "docstring"
-;  [look-up-key]
-;  ((keyword look-up-key) details))
-
-(defn look-up
-  "docstring"
-  [look-up-key]
-  (look-up-key details))
-
-
-(look-up :fname)

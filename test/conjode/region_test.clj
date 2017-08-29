@@ -49,51 +49,27 @@
 
   (testing "Testing get-put"
     (let [test-client (c/connect)]
+      (do
+        (let [region (r/create-client-region "gp-region" :local test-client)]
 
-      (testing "Using ^Region"
-        (do
-          (let [region (r/create-client-region "gp-region" :local test-client)]
+          (testing "Keyword keys and values"
+            (r/gput :a "AAA" region)
+            (r/gput :b :bvalue region)
+            (is (= "AAA" (r/gget :a region)))
+            (is (= :bvalue (r/gget :b region))))
 
-            (testing "Keyword keys and values"
-              (r/gput :a "AAA" region)
-              (r/gput :b :bvalue region)
-              (is (= "AAA" (r/gget :a region)))
-              (is (= :bvalue (r/gget :b region))))
+          (testing "String Keys"
+            (r/gput "A" "AAA" region)
+            (is (= "AAA" (r/gget "A" region))))
 
-            (testing "String Keys"
-              (r/gput "A" "AAA" region)
-              (is (= "AAA" (r/gget "A" region))))
+          (testing "Integer Keys"
+            (r/gput 1 "AAA" region)
+            (is (= "AAA" (r/gget 1 region))))
 
-            (testing "Integer Keys"
-              (r/gput 1 "AAA" region)
-              (is (= "AAA" (r/gget 1 region))))
-
-            (testing "Integer keys and Object as value"
-              (let [customer-obj (Customer. "fname" "lname" 12345678)]
-                (r/gput 2 customer-obj region)
-                (is (= customer-obj (r/gget 2 region))))))))
-
-      (testing "Using region-name"
-        (do
-          (let [region-name "my-region"]
-            (r/create-client-region region-name :local test-client)
-
-            (testing "Keyword keys"
-              (r/gput :a "AAA" "my-region" test-client)
-              (is (= "AAA" (r/gget :a region-name test-client))))
-
-            (testing "String Keys"
-              (r/gput "A" "AAA" region-name test-client)
-              (is (= "AAA" (r/gget "A" region-name test-client))))
-
-            (testing "Integer Keys"
-              (r/gput 1 "AAA" region-name test-client)
-              (is (= "AAA" (r/gget 1 region-name test-client))))
-
-            (testing "Integer keys and Object as value"
-              (let [customer-obj (Customer. "fname" "lname" 12345678)]
-                (r/gput 2 customer-obj region-name test-client)
-                (is (= customer-obj (r/gget 2 region-name test-client)))))))))))
+          (testing "Integer keys and Object as value"
+            (let [customer-obj (Customer. "fname" "lname" 12345678)]
+              (r/gput 2 customer-obj region)
+              (is (= customer-obj (r/gget 2 region))))))))))
 
 (deftest put-get-all-test
   "Tests the gput-all api"
@@ -175,3 +151,14 @@
           (is (= false (r/empty-region? my-region))))))))
 
 
+
+(deftest values-test
+  (testing "Values for a client region"
+    (let [test-client (core/connect)
+          ^Region my-region (r/create-client-region "dummy-region" :local test-client)]
+      (do
+        (r/gput 1 "AA" my-region)
+        (r/gput 2 "BB" my-region)
+        (r/gput :fname "john" my-region)
+        (r/gput :sex :male my-region)
+        (is (= #{"AA" "BB" :male "john"} (r/values my-region)))))))
