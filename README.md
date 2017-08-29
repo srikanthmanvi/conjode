@@ -9,20 +9,23 @@ A [work-in-progress]Clojure library to talk to Apache Geode.
 Get a geode client which connects to a Geode cluster running on defaults on localhost.
 
 ```clojure
-; connects to locator running on default port
+; connect to locator running on default port
 (def my-client (conjode.core/connect))                       
 
-;creates a proxy region on the client
+; alternatively, connect using a geode.properties file
+(def my-client (conjode.core/connect "<PATH_TO_/geode.properties"))                
+
+; creates a proxy region on the client
 (def customer-region 
       (conjode.region/create-client-region "CustomerRegion" :proxy my-client)) 
       
-;put can take java/clojure literals and clojure keywords as keys and Values
+; put can take java/clojure literals and clojure keywords as keys and Values
 (conjode.region/gput 1 "AA" customer-region)
 (conjode.region/gput "fName" "John" customer-region)
 (conjode.region/gput :lname "Doe" customer-region)
 (conjode.region/gput :sex :male customer-region)
 
-;get can take java/clojure literals and clojure keywords as keys
+; get can take java/clojure literals and clojure keywords as keys
 (conjode.region/gget 1 customer-region) ;=>"AA"
 (conjode.region/gget "fName customer-region) ;=>"John"
 (conjode.region/gget :lname customer-region) ;=>"Doe"
