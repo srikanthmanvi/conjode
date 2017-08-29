@@ -31,7 +31,7 @@ Get a geode client which connects to a Geode cluster running on defaults on loca
 (conjode.region/gget :lname customer-region) ;=>"Doe"
 (conjode.region/gget :sex customer-region) ;=>:male
 
-Note: If clojure keywords are to be stored in geode then clojure.jar should be on the Geode server class path.
+Note: If you want clojure keywords to be stored in geode then clojure.jar should be on the Geode server class path.
 
 
 ```
