@@ -6,7 +6,7 @@ A [work-in-progress]Clojure library to talk to Apache Geode.
 
 ## Usage
 
-Get a geode client which connects to a Geode cluster running on defaults on localhost.
+Create a geode client which connects to a distributed system and does get/put operations.
 
 ```clojure
 ; connect to locator running on default port
