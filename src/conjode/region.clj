@@ -24,14 +24,12 @@
 (defn gget
   "Gets the value associated with the given key. Key can be a keyword or a literal"
   ([key region-name ^ClientCache geode-client]
-   ;(gget (util/unkeyword key) (.getRegion geode-client region-name)))
    (gget key (.getRegion geode-client region-name)))
 
   ([key ^Region region]
-    (if (nil? region)
-      {:error (str "Region not found")}
-      ;(.get region (util/unkeyword key)))))
-      (.get region key))))
+   (if (nil? region)
+     {:error (str "Region not found")}
+     (.get region key))))
 
 (defn gput
   "Puts key-value into the given region. Key can keywords, objects or literals."
@@ -41,7 +39,6 @@
   ([key value ^Region region]
    (if (nil? region)
      {:error (str "Region not found")}
-     ;(.put region (util/unkeyword key) value))))
      (.put region key value))))
 
 (defn gput-all
@@ -56,7 +53,7 @@
 (defn ggetAll
   "Gets the values for all the keys in the collection"
   ([keys ^Region region]
-    (.getAll region keys)))
+   (.getAll region keys)))
 
 (defn get-region
   "Returns the instance of org.apache.geode.cache.Region for the
@@ -127,15 +124,57 @@
      {:error (str "Invalid region " region-name)}))
 
   ([^Region region]
-    (if (nil? region)
-      {:error (str "Region is nil")}
-      (.isEmpty region))))
+   (if (nil? region)
+     {:error (str "Region is nil")}
+     (.isEmpty region))))
 
 (defn values
   "values in the client side region. Returns no records for :proxy region"
   ([^Region region]
-    (.values region))
+   (.values region))
 
   ([region-name ^ClientCache geode-client]
-    (values (get-region region-name geode-client))))
+   (values (get-region region-name geode-client))))
 
+(defn remove-entry
+  "Removes the entry with the specified key. The operation removes not only the
+   value but also the key and entry from this region.
+   Remove will be distributed to other caches if the scope is not Scope.LOCAL.
+   More details on the return value can be found here
+   http://geode.apache.org/releases/latest/javadoc/org/apache/geode/cache/Region.html#remove-java.lang.Object-"
+
+  ([key ^Region region]
+   (.remove region key))
+
+  ([key region-name ^ClientCache geode-client]
+   (remove key (region-from-name region-name geode-client))))
+
+(defn remove-value
+  "Invalidates the entry with the specified key. Invalidate only removes the
+   value from the entry, the key is kept intact. To completely remove the entry,
+   remove-entry should be used. The remove-entry will be distributed to other
+   caches if the scope is not Scope.LOCAL.\n"
+
+  ([key ^Region region]
+   (.invalidate region key))
+
+  ([key region-name ^ClientCache geode-client]
+   (remove-value key (region-from-name region-name geode-client))))
+
+(defn remove-all
+  "Removes all of the entries for the specified keys from this region.
+   This operation will be distributed to other caches if the region is not :local"
+
+  ([keys ^Region region]
+   (.removeAll region keys))
+
+  ([key region-name ^ClientCache geode-client]
+   (remove-all keys (region-from-name region-name geode-client))))
+
+(defn all-keys
+  "returns all the keys for a region"
+  ([^Region region]
+   (.keySet region))
+
+  ([region-name ^ClientCache geode-client]
+   (all-keys (get-region region-name geode-client))))

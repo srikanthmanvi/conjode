@@ -1,4 +1,4 @@
 language: clojure
 jdk:
   - oraclejdk8
-script: lein test
+script: lein test conjode.util-test

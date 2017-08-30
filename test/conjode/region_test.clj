@@ -1,7 +1,6 @@
 (ns conjode.region-test
   (:require [clojure.test :as t :refer :all]
             [conjode
-             ;[harness :as h]
              [region :as r]
              [core :as core]]
             [conjode.core :as c])
@@ -162,3 +161,53 @@
         (r/gput :fname "john" my-region)
         (r/gput :sex :male my-region)
         (is (= #{"AA" "BB" :male "john"} (r/values my-region)))))))
+
+(deftest remove-related-test
+
+  (testing "remove related function calls for local region"
+    (let [test-client (core/connect)
+          ^Region my-region (r/create-client-region "dummy-region" :local test-client)]
+      (do
+        (r/gput 1 "AA" my-region)
+        (r/gput 2 "BB" my-region)
+        (r/gput :fname "john" my-region)
+        (r/gput :sex :male my-region)
+        (r/remove-entry :sex my-region)
+        (r/remove-entry 1 my-region)
+        (is (= #{"BB" "john"} (r/values my-region)))
+        (r/remove-value 2 my-region)
+        (is (= 2 (r/size my-region)))
+        (is (nil? (r/gget 2 my-region)))
+        (r/remove-all #{2 :fname} my-region)
+        (is (= 0 (r/size my-region))))))
+
+  (testing "remove related function calls for proxy region"
+    (let [test-client (core/connect)
+          ^Region my-region (r/get-region "CustomerRegion" test-client)]
+      (do
+        (r/gput 1 "AA" my-region)
+        (r/gput 2 "BB" my-region)
+        (r/gput :fname "john" my-region)
+        (r/gput :sex :male my-region)
+        (is (= :male (r/remove-entry :sex my-region)))
+        (is (= "AA" (r/remove-entry 1 my-region)))
+        (r/remove-value 2 my-region)
+        (is (= 2 (r/size my-region)))
+        (is (nil? (r/gget 2 my-region)))
+        (r/remove-all #{2 :fname} my-region)
+        (is (= 0 (r/size my-region)))))))
+
+
+(deftest all-keys-test
+
+  (testing "all-keys for proxy region"
+    (let [test-client (core/connect)
+          ^Region my-region (r/get-region "CustomerRegion" test-client)]
+      (do
+        (r/gput 1 "AA" my-region)
+        (r/gput 2 "BB" my-region)
+        (r/gput :fname "john" my-region)
+        (r/gput :sex :male my-region)
+        (is (clojure.set/subset? #{1 2 :fname :sex} (r/all-keys my-region)))))))
+
+
