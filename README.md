@@ -24,7 +24,7 @@ Alternatively, you can `git clone` conjode repo.
 (def my-client (c/connect))
 
 ; alternatively, connect using a geode.properties file
-;(def my-client (c/connect "<PATH_TO_/geode.properties"))
+(def my-client (c/connect "<PATH_TO_/geode.properties"))
 
 ```
 
