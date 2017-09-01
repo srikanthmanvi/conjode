@@ -6,6 +6,14 @@ A [work-in-progress]Clojure library to talk to Apache Geode.
 
 ## Usage
 
+#### Add conjode dependency in your .project.clj
+
+```clojure
+[geode/conjode "0.1.0-SNAPSHOT"]
+```
+Alternatively, You can close the conjode github repo.
+
+
 #### Create a geode client which connects to a distributed system and does get/put operations.
 
 ```clojure
@@ -24,10 +32,12 @@ A [work-in-progress]Clojure library to talk to Apache Geode.
       (r/create-client-region "CustomerRegion" :proxy my-client)) 
       
 ; put can take java/clojure literals and clojure keywords as keys and Values
+; put related function
 (r/gput 1 "AA" customer-region)
 (r/gput "fName" "John" customer-region)
 (r/gput :lname "Doe" customer-region)
-(r/gput :sex :male customer-region)
+
+
 
 ; get can take java/clojure literals and clojure keywords as keys
 (r/gget 1 customer-region) ;=>"AA"
@@ -35,10 +45,13 @@ A [work-in-progress]Clojure library to talk to Apache Geode.
 (r/gget :lname customer-region) ;=>"Doe"
 (r/gget :sex customer-region) ;=>:male
 
-Note: If you want clojure keywords to be stored in geode then clojure.jar should be on the Geode server class path.
-
-
 ```
+Note: If you want clojure keywords to be stored in geode then clojure.jar should be on the Geode server class path, start geode server as below
+
+```shell
+gfsh>start locator --name=locator1 --classpath=/Users/smanvi/Software/clojure-1.8.0/clojure-1.8.0.jar
+```
+
 
 ## License
 
