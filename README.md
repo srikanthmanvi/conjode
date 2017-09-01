@@ -9,7 +9,7 @@ A [work-in-progress]Clojure library to talk to Apache Geode.
 #### Create a geode client which connects to a distributed system and does get/put operations.
 
 ```clojure
-; connect to locator running on default port
+; connect to locator running on localhost[10334]
 (def my-client (conjode.core/connect))                       
 
 ; alternatively, connect using a geode.properties file
