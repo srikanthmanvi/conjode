@@ -9,27 +9,31 @@ A [work-in-progress]Clojure library to talk to Apache Geode.
 #### Create a geode client which connects to a distributed system and does get/put operations.
 
 ```clojure
+(ns playground
+  (:require [conjode.core :as c]
+            [conjode.region :as r]))
+
 ; connect to locator running on localhost[10334]
-(def my-client (conjode.core/connect))                       
+(def my-client (c/connect))                       
 
 ; alternatively, connect using a geode.properties file
-(def my-client (conjode.core/connect "<PATH_TO_/geode.properties"))                
+(def my-client (c/connect "<PATH_TO_/geode.properties"))                
 
 ; creates a proxy region on the client
 (def customer-region 
-      (conjode.region/create-client-region "CustomerRegion" :proxy my-client)) 
+      (r/create-client-region "CustomerRegion" :proxy my-client)) 
       
 ; put can take java/clojure literals and clojure keywords as keys and Values
-(conjode.region/gput 1 "AA" customer-region)
-(conjode.region/gput "fName" "John" customer-region)
-(conjode.region/gput :lname "Doe" customer-region)
-(conjode.region/gput :sex :male customer-region)
+(r/gput 1 "AA" customer-region)
+(r/gput "fName" "John" customer-region)
+(r/gput :lname "Doe" customer-region)
+(r/gput :sex :male customer-region)
 
 ; get can take java/clojure literals and clojure keywords as keys
-(conjode.region/gget 1 customer-region) ;=>"AA"
-(conjode.region/gget "fName" customer-region) ;=>"John"
-(conjode.region/gget :lname customer-region) ;=>"Doe"
-(conjode.region/gget :sex customer-region) ;=>:male
+(r/gget 1 customer-region) ;=>"AA"
+(r/gget "fName" customer-region) ;=>"John"
+(r/gget :lname customer-region) ;=>"Doe"
+(r/gget :sex customer-region) ;=>:male
 
 Note: If you want clojure keywords to be stored in geode then clojure.jar should be on the Geode server class path.
 
