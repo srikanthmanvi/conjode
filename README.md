@@ -11,7 +11,7 @@ A [work-in-progress]Clojure library to talk to Apache Geode.
 ```clojure
 [geode/conjode "0.1.0-SNAPSHOT"]
 ```
-Alternatively, You can close the conjode github repo.
+Alternatively, you can `git clone` conjode repo.
 
 #### Connecting to a Geode Distributed System
 
