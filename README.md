@@ -6,11 +6,27 @@ A Clojure library to talk to Apache Geode.
 
 ## Usage
 
-#### Add conjode dependency in your .project.clj
+##### Leiningen/Boot
 
 ```clojure
 [geode/conjode "0.1.0-SNAPSHOT"]
 ```
+##### Gradle
+
+```gradle
+compile "geode:conjode:0.1.0-SNAPSHOT"
+```
+
+##### Maven
+
+```maven
+<dependency>
+  <groupId>geode</groupId>
+  <artifactId>conjode</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
 Alternatively, you can `git clone` conjode repo.
 
 #### Connecting to a Geode Distributed System
