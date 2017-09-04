@@ -110,12 +110,17 @@ Alternatively, you can `git clone` conjode repo.
 Functions related to queries are in the namespace `conjode.query`.
 
 ```clojure
+(ns playground
+  (:require [conjode.core :as c]
+            [conjode.region :as r]
+            [conjode.query :as q))
+            
 (r/clear-region customer-region)
 (r/gput 100 (Customer. "Albert" "Einstein" 12334324) customer-region)
 (r/gput 101 (Customer. "John" "Doe" 45276675) customer-region)
 (r/gput 102 (Customer. "John" "Smith" 432540012) customer-region)
 
-(conjode.query/execute-query "select * from /CustomerRegion" my-client)
+(q/execute-query "select * from /CustomerRegion" my-client)
 
 ; execute query returns list of results (list of Customers in the above case)
 
@@ -134,7 +139,7 @@ Functions related to queries are in the namespace `conjode.query`.
 List of params can be passed to the queries as shown below.
 
 ```clojure
-(conjode.query/execute-query "select * from /CustomerRegion where firstName=$1 and lastName=$2" ["John" "Smith"] my-client)
+(q/execute-query "select * from /CustomerRegion where firstName=$1 and lastName=$2" ["John" "Smith"] my-client)
 
 ; The above returns 1 entry
 ;[#object[org.conjode.java.Customer
