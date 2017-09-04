@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/srikanthmanvi/conjode.svg?branch=master)](https://travis-ci.org/srikanthmanvi/conjode)
 
-A [work-in-progress]Clojure library to talk to Apache Geode.
+A Clojure library to talk to Apache Geode.
 
 ## Usage
 
