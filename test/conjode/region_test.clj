@@ -118,8 +118,7 @@
                  (r/destroy-client-region "dcr-partition-region" test-client)
                  (let [result (r/gput 2 "BB" "dcr-partition-region" test-client)]
                    (is (contains? result :error))
-                   (is (= "Region DCR-PARTITION-REGION not found." (:error result))))))
-             )))
+                   (is (= "Region DCR-PARTITION-REGION not found." (:error result)))))))))
 
 
 (deftest clear-region-test

@@ -13,4 +13,8 @@ create region --name=/dcr-partition-region --type=PARTITION
 # For testing conjode.region/clear-region
 create region --name=/cr-partition-region --type=PARTITION
 
+# For testing conjode.query/execute
+create region --name=/e-region --type=PARTITION
+
+
 deploy --jar=../target/conjode-0.1.0-SNAPSHOT.jar

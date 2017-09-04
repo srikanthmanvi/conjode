@@ -110,11 +110,14 @@
   "Removes all entries from this region.
   Clear will be distributed to other caches if the scope is not Scope.LOCAL.
   Cannot be called to clear server side regions."
-  [region-name ^ClientCache geode-client]
-  (let [^Region region (i/region-from-name region-name geode-client)]
-    (if (nil? region)
-      {:error (str "Region not found")}
-      (.clear region))))
+  ([region-name ^ClientCache geode-client]
+   (let [^Region region (i/region-from-name region-name geode-client)]
+     (if (nil? region)
+       {:error (str "Region not found")}
+       (.clear region))))
+
+  ([^Region region]
+    (.clear region)))
 
 (defn empty-region?
   "returns true if the region is empty, false otherwise"

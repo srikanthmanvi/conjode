@@ -7,7 +7,7 @@
         <locator host="localhost" port="10334"/>
     </pool>
 
-    <region name="CustomerRegion" refid="CACHING_PROXY">
+    <region name="CustomerRegion" refid="PROXY">
             </region>
 
     <region name="Order" refid="PROXY"/>
