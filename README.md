@@ -185,7 +185,8 @@ Clojure maps as query results.
 ; {:fname "John", :lname "Doe", :state "NC"}]
 ```
 
-**Note:** If you want clojure keywords to be stored in geode then clojure.jar should be on the Geode server class path, start geode server as below
+#### Note: 
+If you want clojure keywords to be stored in geode then clojure.jar should be on the Geode server class path, start geode server as below
 
 ```shell
 gfsh>start locator --name=locator1 --classpath=/Users/smanvi/Software/clojure-1.8.0/clojure-1.8.0.jar
