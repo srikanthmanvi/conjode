@@ -2,9 +2,28 @@
 
 [![Build Status](https://travis-ci.org/srikanthmanvi/conjode.svg?branch=master)](https://travis-ci.org/srikanthmanvi/conjode)
 
-A Clojure library to talk to Apache Geode.
+A minimalist clojure client for [Apache Geode](http://geode.apache.org/).
 
-## Usage
+### Features
+
+- conjode should be used on the client side of the Geode distributed system.
+- Since clojure has a [repl](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop), conjode can be used for exploratory  analysis of data in Apache Geode. 
+- Broadly speaking conjode supports
+   - Region operations (Region is where Geode stores data. Region implements java.util.concurrent.ConcurrentMap)
+        - Creating/Deleting client regions.
+        - Data insertion/removal. Supports clojure data types and Java objects.
+        
+    - Querying
+        - Execute query with/without params.
+
+    - Function execution
+        - Execute Apache Geode functions (Geode functions are executed on the server side).
+   
+
+
+### Artifacts
+
+conjode artifacts are released to [conjode](https://clojars.org/geode/conjode)
 
 ##### Leiningen/Boot
 
@@ -28,6 +47,8 @@ compile "geode:conjode:0.1.0-SNAPSHOT"
 ```
 
 Alternatively, you can `git clone` conjode repo.
+
+### Usage
 
 #### Connecting to a Geode Distributed System
 
