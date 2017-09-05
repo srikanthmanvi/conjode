@@ -122,7 +122,7 @@ Functions related to queries are in the namespace `conjode.query`.
 
 (q/execute-query "select * from /CustomerRegion" my-client)
 
-; execute query returns list of results (list of Customers in the above case)
+; execute query returns list of results (list of Customer objects in the above case)
 
 ;[#object[org.conjode.java.Customer
 ;         0x4ef2a446
