@@ -1,7 +1,8 @@
 (ns playground
   (:require [conjode.core :as c]
             [conjode.region :as r]
-            [conjode.query :as q :refer :all])
+            [conjode.query :as q :refer :all]
+            [conjode.function :as f :refer :all])
   (:import (org.conjode.java Customer)))
 
 ;Namespace to quickly run conjode functions
@@ -60,7 +61,7 @@
 (r/remove-value 1 customer-region)                ;Leaves key intact
 (r/values customer-region)
 ;(r/destroy-client-region "CustomerRegion" my-client)
-(r/clear-region "CustomerRegion" my-client)
+;(r/clear-region "CustomerRegion" my-client)
 
 
 (r/clear-region customer-region)
