@@ -2,16 +2,53 @@
 
 [![Build Status](https://travis-ci.org/srikanthmanvi/conjode.svg?branch=master)](https://travis-ci.org/srikanthmanvi/conjode)
 
-A Clojure library to talk to Apache Geode.
+A minimalist clojure client for [Apache Geode](http://geode.apache.org/).
 
-## Usage
+### Features
 
-#### Add conjode dependency in your .project.clj
+- conjode should be used on the client side of the Geode distributed system.
+- Since clojure has a [repl](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop), conjode can be used for exploratory  analysis of data in Apache Geode. 
+- Broadly speaking conjode supports
+   - Region operations (Region is where Geode stores data. Region implements java.util.concurrent.ConcurrentMap)
+        - Creating/Deleting client regions.
+        - Data insertion/removal. Supports clojure data types and Java objects.
+        
+    - Querying
+        - Execute query with/without params.
+
+    - Function execution
+        - Execute Apache Geode functions (Geode functions are executed on the server side).
+   
+
+
+### Artifacts
+
+conjode artifacts are released to [conjode](https://clojars.org/geode/conjode)
+
+##### Leiningen/Boot
 
 ```clojure
 [geode/conjode "0.1.0-SNAPSHOT"]
 ```
+##### Gradle
+
+```gradle
+compile "geode:conjode:0.1.0-SNAPSHOT"
+```
+
+##### Maven
+
+```maven
+<dependency>
+  <groupId>geode</groupId>
+  <artifactId>conjode</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
 Alternatively, you can `git clone` conjode repo.
+
+### Usage
 
 #### Connecting to a Geode Distributed System
 
@@ -94,14 +131,19 @@ Alternatively, you can `git clone` conjode repo.
 Functions related to queries are in the namespace `conjode.query`.
 
 ```clojure
+(ns playground
+  (:require [conjode.core :as c]
+            [conjode.region :as r]
+            [conjode.query :as q))
+            
 (r/clear-region customer-region)
 (r/gput 100 (Customer. "Albert" "Einstein" 12334324) customer-region)
 (r/gput 101 (Customer. "John" "Doe" 45276675) customer-region)
 (r/gput 102 (Customer. "John" "Smith" 432540012) customer-region)
 
-(conjode.query/execute-query "select * from /CustomerRegion" my-client)
+(q/execute-query "select * from /CustomerRegion" my-client)
 
-; execute query returns list of results (list of Customers in the above case)
+; execute query returns list of results (list of Customer objects in the above case)
 
 ;[#object[org.conjode.java.Customer
 ;         0x4ef2a446
@@ -118,7 +160,7 @@ Functions related to queries are in the namespace `conjode.query`.
 List of params can be passed to the queries as shown below.
 
 ```clojure
-(conjode.query/execute-query "select * from /CustomerRegion where firstName=$1 and lastName=$2" ["John" "Smith"] my-client)
+(q/execute-query "select * from /CustomerRegion where firstName=$1 and lastName=$2" ["John" "Smith"] my-client)
 
 ; The above returns 1 entry
 ;[#object[org.conjode.java.Customer
@@ -143,7 +185,8 @@ Clojure maps as query results.
 ; {:fname "John", :lname "Doe", :state "NC"}]
 ```
 
-**Note:** If you want clojure keywords to be stored in geode then clojure.jar should be on the Geode server class path, start geode server as below
+#### Note: 
+If you want clojure keywords to be stored in geode then clojure.jar should be on the Geode server class path, start geode server as below
 
 ```shell
 gfsh>start locator --name=locator1 --classpath=/Users/smanvi/Software/clojure-1.8.0/clojure-1.8.0.jar
