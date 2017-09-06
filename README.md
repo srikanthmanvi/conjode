@@ -1,6 +1,7 @@
 # conjode
 
 [![Build Status](https://travis-ci.org/srikanthmanvi/conjode.svg?branch=master)](https://travis-ci.org/srikanthmanvi/conjode)
+[![Clojars Project](https://img.shields.io/clojars/v/geode/conjode.svg)](https://clojars.org/geode/conjode)
 
 A minimalist clojure client for [Apache Geode](http://geode.apache.org/).
 
