@@ -4,7 +4,7 @@
 
 A minimalist clojure client for [Apache Geode](http://geode.apache.org/).
 
-### Features
+## Features
 
 - conjode should be used on the client side of the Geode distributed system.
 - Since clojure has a [repl](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop), conjode can be used for exploratory  analysis of data in Apache Geode. 
@@ -21,7 +21,7 @@ A minimalist clojure client for [Apache Geode](http://geode.apache.org/).
    
 
 
-### Artifacts
+## Artifacts
 
 conjode artifacts are released to [conjode](https://clojars.org/geode/conjode)
 
@@ -48,7 +48,7 @@ compile "geode:conjode:0.1.0-SNAPSHOT"
 
 Alternatively, you can `git clone` conjode repo.
 
-### Usage
+## Usage
 
 #### Connecting to a Geode Distributed System
 
@@ -205,6 +205,16 @@ If you want clojure keywords to be stored in geode then clojure.jar should be on
 
 ```shell
 gfsh>start locator --name=locator1 --classpath=/Users/smanvi/Software/clojure-1.8.0/clojure-1.8.0.jar
+```
+
+#### Running Tests
+As conjode is a wrapper around Apache Geode java client, and as clojure makes code concise, the tests in conjode are more of integration tests than units tests. To run the tests for each namespace you should have a distributed system up and running. A distributed stystem can be started by executing the script `conjode/run/startServer.sh`. This script brings up a server, locator, creates some regiongs, deploys a jar file which has java domain classes needed for testing and a simple function.
+Tests in each names can be run by executing the below
+
+```clojure
+(in-ns 'conjode.region-test)
+(run-tests)
+
 ```
 
 
