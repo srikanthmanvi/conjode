@@ -185,6 +185,21 @@ Clojure maps as query results.
 ; {:fname "John", :lname "Doe", :state "NC"}]
 ```
 
+#### Executing Functions
+
+If you have functions deployed on the server side, you can invoke the functions from the client side as below.
+In the example below "TestFunction" is a function deployed on the server which returns list of strings.
+```clojure
+(ns playground
+  (:require [conjode.core :as c]
+            [conjode.region :as r]
+            [conjode.function :as f :refer :all])
+            
+(f/execute-function-on-server "TestFunction" my-client)
+;; ["Hello" " world." " Have a good day!" "true"]
+```
+
+
 #### Note: 
 If you want clojure keywords to be stored in geode then clojure.jar should be on the Geode server class path, start geode server as below
 
