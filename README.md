@@ -24,7 +24,7 @@ A minimalist clojure client for [Apache Geode](http://geode.apache.org/).
 
 ## Artifacts
 
-conjode artifacts are released to [conjode](https://clojars.org/geode/conjode)
+conjode artifacts are released to [clojars](https://clojars.org/geode/conjode)
 
 ##### Leiningen/Boot
 
