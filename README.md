@@ -221,7 +221,6 @@ Tests in each names can be run by executing the below
 
 ## License
 
-Copyright © 2016 FIXME
+Copyright (C) 2017 Srikanth Manvi
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Double-licensed under the Eclipse Public License and Apache Public License 2.0.
